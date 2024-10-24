@@ -1,0 +1,63 @@
+/* Root styling for the main window */
+.root {
+    -fx-background-color: #2C3E50;  /* Dark blue background for the window */
+    -fx-padding: 20;                /* Padding inside the root container */
+    -fx-font-family: 'Segoe UI', sans-serif;  /* Use a clean, modern font */
+}
+
+/* CPU Arc (Clock) Styling */
+.arc {
+    -fx-fill: linear-gradient(#27AE60, #2ECC71);  /* Gradient green for arc (CPU usage) */
+    -fx-stroke: #34495E;                          /* Dark gray stroke for the arc */
+    -fx-stroke-width: 3;                          /* Stroke width */
+    -fx-effect: dropshadow(gaussian, #16A085, 10, 0.5, 0, 0);  /* Drop shadow for depth */
+}
+
+/* CPU Label (Percentage Display) */
+.cpu-label {
+    -fx-font-size: 28px;           /* Larger font for CPU percentage */
+    -fx-font-weight: bold;         /* Bold font */
+    -fx-text-fill: #ECF0F1;        /* Light gray text color */
+}
+
+/* Button styling */
+.button {
+    -fx-background-color: #2980B9;  /* Blue background */
+    -fx-text-fill: white;           /* White text */
+    -fx-font-size: 14px;            /* Font size */
+    -fx-background-radius: 8;       /* Rounded corners */
+    -fx-padding: 10 20;             /* Padding inside the button */
+    -fx-cursor: hand;               /* Hand cursor on hover */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.75), 10, 0, 0, 2);  /* Drop shadow */
+}
+
+.button:hover {
+    -fx-background-color: #3498DB;  /* Lighten the background on hover */
+}
+
+.button:pressed {
+    -fx-background-color: #1F618D;  /* Darken the background when pressed */
+}
+
+/* Info Label styling */
+.info-label {
+    -fx-font-size: 18px;       /* Larger font for info */
+    -fx-text-fill: #ECF0F1;    /* Light text color */
+    -fx-padding: 10;           /* Padding around label */
+}
+
+/* Layout for sections (like CPU, Memory, etc.) */
+.section {
+    -fx-background-color: #34495E;  /* Dark gray background for sections */
+    -fx-padding: 15;                /* Padding inside the section */
+    -fx-background-radius: 10;      /* Rounded corners */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 10, 0.5, 0, 1);  /* Soft drop shadow */
+    -fx-margin-bottom: 15;          /* Margin between sections */
+}
+
+/* Progress Bar styling for CPU usage */
+.progress-bar {
+    -fx-accent: #2ECC71;         /* Green color for progress */
+    -fx-control-inner-background: #95A5A6;  /* Light gray background for progress */
+    -fx-background-radius: 15;   /* Rounded corners */
+}
