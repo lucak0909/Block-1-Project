@@ -2,84 +2,73 @@ package org.example.block1project;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.stage.Stage;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.util.Duration;
 
-import java.lang.management.ManagementFactory;
-import com.sun.management.OperatingSystemMXBean;
+public class AnimatedCpuClock {
 
-public class AnimatedCpuClock extends Application {
+    private XYChart.Series<Number, Number> clockSeries;  // Series to hold CPU clock data
+    private int timeInMilliseconds = 0;  // Track elapsed time in milliseconds
+    private static final int MAX_TIME_RANGE = 10000;  // Show the last 10 "graph seconds"
+    private static final int UPDATE_INTERVAL = 100;   // Update interval (100ms)
+    private static final double TIME_SCALE = 0.7;     // Faster time scale (70% of real-time speed)
 
-    private static final int CLOCK_RADIUS = 100;  // Radius for the clock (arc)
-    private Arc cpuArc;  // Arc to display CPU usage
-    private Label cpuLabel;  // Label to display CPU percentage
+    private LineChart<Number, Number> clockChart;
 
-    @Override
-    public void start(Stage primaryStage) {
-        // Create an Arc (part of a circle) to represent CPU usage
-        cpuArc = new Arc();
-        cpuArc.setRadiusX(CLOCK_RADIUS);
-        cpuArc.setRadiusY(CLOCK_RADIUS);
-        cpuArc.setStartAngle(90);  // Start from the top
-        cpuArc.setLength(0);  // Initial arc length (representing 0% usage)
-        cpuArc.setType(ArcType.ROUND);
-        cpuArc.getStyleClass().add("arc");
+    public AnimatedCpuClock() {
+        // Create the X and Y axes
+        NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);  // Last 10 seconds (graph time)
+        NumberAxis yAxis = new NumberAxis(0, 100, 10);  // Y-axis range between 0 and 100 (percentage)
 
-        // Create a Label to show the percentage of CPU usage
-        cpuLabel = new Label("CPU Usage: 0%");
-        cpuLabel.getStyleClass().add("arc");
+        // Create a LineChart to display CPU clock speed over time
+        clockChart = new LineChart<>(xAxis, yAxis);
+        clockChart.setTitle("CPU Clock Usage Over Time");
 
-        // Arrange the arc and label in a StackPane (so the label is on top of the arc)
-        StackPane root = new StackPane();
-        root.getChildren().addAll(cpuArc, cpuLabel);
+        // Remove grid lines for a cleaner look
+        clockChart.setHorizontalGridLinesVisible(false);
+        clockChart.setVerticalGridLinesVisible(false);
 
-        // Create a Scene and add it to the Stage
-        Scene scene = new Scene(root, 300, 300);
-        primaryStage.setTitle("Animated CPU Usage Clock");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        // Create a Series to hold the data
+        clockSeries = new XYChart.Series<>();
+        clockSeries.setName("CPU Clock Speed");
 
-        // Start a Timeline to update the CPU usage regularly
+        // Add the series to the LineChart
+        clockChart.getData().add(clockSeries);
+        clockChart.setCreateSymbols(false);  // Disable symbols on data points (just the line)
+
+        // Start a Timeline to update the clock speed regularly (every 0.1 seconds for smooth transitions)
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(1), event -> updateCpuUsage())
+            new KeyFrame(Duration.millis(UPDATE_INTERVAL), event -> updateCpuClockSpeed())
         );
         timeline.setCycleCount(Timeline.INDEFINITE);  // Run indefinitely
         timeline.play();  // Start the animation
     }
 
-    // Method to update the CPU usage and adjust the arc and label accordingly
-    private void updateCpuUsage() {
-        // Get CPU usage using OperatingSystemMXBean
-        OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        double cpuUsage = osBean.getSystemCpuLoad() * 100;
+    // Method to update the CPU clock speed and add data to the graph
+    private void updateCpuClockSpeed() {
+        // Simulating clock usage - replace this with real data if available
+        double clockSpeed = Math.random() * 100;  // Random CPU clock speed for demonstration (0 to 100%)
 
-        // Ensure CPU usage is between 0 and 100
-        cpuUsage = Math.max(0, Math.min(100, cpuUsage));
+        // Add the clock speed to the series (with time on the X-axis, adjusted by TIME_SCALE)
+        clockSeries.getData().add(new XYChart.Data<>((timeInMilliseconds * TIME_SCALE / 1000.0), clockSpeed));
 
-        // Update the arc's length to represent the CPU usage
-        cpuArc.setLength(-cpuUsage * 3.6);  // Multiply by 3.6 to convert percentage to angle
+        // Increment the time counter
+        timeInMilliseconds += UPDATE_INTERVAL;
 
-        // Update the label to show the percentage
-        cpuLabel.setText(String.format("CPU Usage: %.1f%%", cpuUsage));
-
-        // Change the arc color based on CPU usage (green to red)
-        if (cpuUsage < 50) {
-            cpuArc.setFill(Color.GREEN);
-        } else if (cpuUsage < 80) {
-            cpuArc.setFill(Color.ORANGE);
-        } else {
-            cpuArc.setFill(Color.RED);
+        // Remove old data points to keep the X-axis range constant (last 10 seconds in graph time)
+        if (timeInMilliseconds * TIME_SCALE > MAX_TIME_RANGE) {
+            clockSeries.getData().remove(0);  // Remove the oldest data point
         }
+
+        // Update the X-axis range to keep showing the last 10 seconds (in graph time)
+        ((NumberAxis) clockSeries.getChart().getXAxis()).setLowerBound((timeInMilliseconds * TIME_SCALE - MAX_TIME_RANGE) / 1000.0);
+        ((NumberAxis) clockSeries.getChart().getXAxis()).setUpperBound((timeInMilliseconds * TIME_SCALE) / 1000.0);
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    // Method to return the LineChart for embedding in the GUI
+    public LineChart<Number, Number> getClockChart() {
+        return clockChart;
     }
 }

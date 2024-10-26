@@ -2,78 +2,64 @@ package org.example.block1project;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.application.Platform;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.lang.management.ManagementFactory;
 import com.sun.management.OperatingSystemMXBean;
 
-public class AnimatedRamUsage extends Application {
+public class AnimatedRamUsage {
 
-    private static final int CIRCLE_RADIUS = 100;  // Radius for the circle (arc)
-    private Arc ramArc;  // Arc to display RAM usage
-    private Label ramLabel;  // Label to display RAM percentage
+    private Arc usedRamArc;  // Arc representing used RAM
+    private Arc freeRamArc;  // Arc representing free RAM
+    private OperatingSystemMXBean osBean;
 
-    @Override
-    public void start(Stage primaryStage) {
-        // Create an Arc (part of a circle) to represent RAM usage
-        ramArc = new Arc();
-        ramArc.setRadiusX(CIRCLE_RADIUS);
-        ramArc.setRadiusY(CIRCLE_RADIUS);
-        ramArc.setStartAngle(90);  // Start from the top
-        ramArc.setLength(0);  // Initial arc length (representing 0% usage)
-        ramArc.setType(ArcType.ROUND);
-        ramArc.setFill(Color.BLUE);  // Set the arc color to blue
-        ramArc.setStroke(Color.BLACK);  // Add an outline
+    public AnimatedRamUsage() {
+        // Initialize the OperatingSystemMXBean to get system information
+        osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
 
-        // Create a Label to show the percentage of RAM usage
-        ramLabel = new Label("RAM Usage: 0%");
-        ramLabel.setStyle("-fx-font-size: 20px;");
+        // Create the Arc for used RAM
+        usedRamArc = new Arc(200, 200, 100, 100, 90, 0);  // Center at (200, 200), radius 100
+        usedRamArc.setType(ArcType.ROUND);
+        usedRamArc.setFill(Color.RED);  // Red for used RAM
 
-        // Arrange the arc and label in a StackPane (so the label is on top of the arc)
-        StackPane root = new StackPane();
-        root.getChildren().addAll(ramArc, ramLabel);
+        // Create the Arc for free RAM
+        freeRamArc = new Arc(200, 200, 100, 100, 90, 360);  // Full circle for free RAM
+        freeRamArc.setType(ArcType.ROUND);
+        freeRamArc.setFill(Color.GREEN);  // Green for free RAM
 
-        // Create a Scene and add it to the Stage
-        Scene scene = new Scene(root, 300, 300);
-        primaryStage.setTitle("Animated RAM Usage Pie Chart");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
-        // Start a Timeline to update the RAM usage regularly
+        // Start a Timeline to update the Arcs regularly
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(1), event -> updateRamUsage())
+            new KeyFrame(Duration.seconds(1), event -> updateRamUsage())
         );
-        timeline.setCycleCount(Timeline.INDEFINITE);  // Run indefinitely
-        timeline.play();  // Start the animation
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();  // Start the updates
     }
 
-    // Method to update the RAM usage and adjust the arc and label accordingly
+    // Method to update the Arcs representing RAM usage
     private void updateRamUsage() {
-        // Get RAM usage using OperatingSystemMXBean
-        OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        double totalRam = osBean.getTotalPhysicalMemorySize();
-        double usedRam = totalRam - osBean.getFreePhysicalMemorySize();
-        double ramUsage = (usedRam / totalRam) * 100;
+        long totalMemory = osBean.getTotalPhysicalMemorySize();
+        long freeMemory = osBean.getFreePhysicalMemorySize();
+        long usedMemory = totalMemory - freeMemory;
 
-        // Ensure RAM usage is between 0 and 100
-        ramUsage = Math.max(0, Math.min(100, ramUsage));
+        // Calculate percentage of used RAM (converted to angle 0 to 360)
+        double usedPercentage = ((double) usedMemory / totalMemory) * 360;
 
-        // Update the arc's length to represent the RAM usage
-        ramArc.setLength(-ramUsage * 3.6);  // Multiply by 3.6 to convert percentage to angle
-
-        // Update the label to show the percentage
-        ramLabel.setText(String.format("RAM Usage: %.1f%%", ramUsage));
+        // Update the Arcs on the JavaFX Application Thread
+        Platform.runLater(() -> {
+            usedRamArc.setLength(-usedPercentage);  // Arc's angle set based on percentage used
+            freeRamArc.setLength(360 - usedPercentage);  // Free RAM is the remaining part
+        });
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    // Method to return the Pane containing the RAM usage Arcs
+    public Pane getRamUsagePane() {
+        Pane pane = new Pane();
+        pane.getChildren().addAll(freeRamArc, usedRamArc);
+        return pane;
     }
 }
