@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;  // Import VBox instead of StackPane
 import javafx.stage.Stage;
 
@@ -35,15 +34,17 @@ public class projectGui extends Application {
         // Create the Home Tab with general system information
         Tab homeTab = new Tab("Home");
         homeTab.setContent(homePageInfo.getHomePageLayout());  // Use the VBox with system info
+        homeTab.setClosable(false);  // Prevent closing the Home tab
 
         // Create the CPU Tab with both CPU load and CPU clock graphs
         Tab cpuTab = new Tab("CPU");
         cpuTab.setContent(cpuPage);  // Set the VBox as the content
+        cpuTab.setClosable(false);  // Prevent closing the CPU tab
 
         // Create a Memory Tab with real-time RAM usage
         Tab memoryTab = new Tab("Memory");
         memoryTab.setContent(ramUsage.getRamUsagePane());
-
+        memoryTab.setClosable(false);  // Prevent closing the Memory tab
 
         // Add tabs to the TabPane
         tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab);
