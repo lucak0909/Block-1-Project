@@ -27,7 +27,7 @@ public class AnimatedCpuLineGraph {
 
         // Create a LineChart to display CPU usage over time
         lineChart = new LineChart<>(xAxis, yAxis);
-        lineChart.setTitle("CPU Usage Over Time");
+        lineChart.setTitle("CPU Usage %");
         lineChart.setHorizontalGridLinesVisible(false);
         lineChart.setVerticalGridLinesVisible(false);
 

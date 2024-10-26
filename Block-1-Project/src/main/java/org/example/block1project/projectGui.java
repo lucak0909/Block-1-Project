@@ -6,6 +6,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;  // Import VBox instead of StackPane
 import javafx.stage.Stage;
 
 public class projectGui extends Application {
@@ -24,9 +25,9 @@ public class projectGui extends Application {
         cpuClock = new AnimatedCpuClock();
         homePageInfo = new HomePageInfo();  // Home page system information
 
-        // CPU Line Graph and Clock in one scene (for the CPU Tab)
-        StackPane cpuChart = new StackPane(cpuLineGraph.getLineChart());
-        StackPane cpuClockChart = new StackPane(cpuClock.getClockChart());
+        // Create a VBox for the CPU Tab layout
+        VBox cpuPage = new VBox();  // Change to VBox
+        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClock.getClockChart());
 
         // Create a TabPane as the main layout
         TabPane tabPane = new TabPane();
@@ -37,13 +38,12 @@ public class projectGui extends Application {
 
         // Create the CPU Tab with both CPU load and CPU clock graphs
         Tab cpuTab = new Tab("CPU");
-        StackPane cpuPage = new StackPane(cpuChart, cpuClockChart);
-        cpuTab.setContent(cpuPage);
+        cpuTab.setContent(cpuPage);  // Set the VBox as the content
 
         // Create a Memory Tab with real-time RAM usage
         Tab memoryTab = new Tab("Memory");
-        StackPane memoryPage = new StackPane(ramUsage.getRamUsagePane());  // Use the Arc-based RAM visualization
-        memoryTab.setContent(memoryPage);
+        memoryTab.setContent(ramUsage.getRamUsagePane());
+
 
         // Add tabs to the TabPane
         tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab);
