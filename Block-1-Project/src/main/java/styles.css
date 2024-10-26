@@ -7,7 +7,7 @@
 
 /* TabPane Styling */
 .tab-pane .tab-header-background {
-    -fx-background-color: #1c1c1c; /* Dark gray background for the tab bar */
+    -fx-background-color: #ffffff; /* Dark gray background for the tab bar */
 }
 
 .tab-pane .tab {
@@ -16,7 +16,7 @@
 }
 
 .tab-pane .tab:selected {
-    -fx-background-color: #004d40; /* Dark teal background for selected tab */
+    -fx-background-color: #696969; /* Dark teal background for selected tab */
     -fx-text-fill: #ffffff;
 }
 

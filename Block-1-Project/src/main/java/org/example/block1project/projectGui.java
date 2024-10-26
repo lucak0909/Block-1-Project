@@ -53,7 +53,7 @@ public class projectGui extends Application {
         root.setCenter(tabPane);
 
         // Create the scene and apply the CSS stylesheet
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 1200, 600);
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());  // Apply the CSS file
 
         // Set up the stage
