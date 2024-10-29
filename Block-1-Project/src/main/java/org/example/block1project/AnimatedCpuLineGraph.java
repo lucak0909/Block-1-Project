@@ -30,6 +30,7 @@ public class AnimatedCpuLineGraph {
         lineChart.setTitle("CPU Usage %");
         lineChart.setHorizontalGridLinesVisible(false);
         lineChart.setVerticalGridLinesVisible(false);
+        lineChart.setLegendVisible(false);
 
         // Create a Series to hold the data
         cpuSeries = new XYChart.Series<>();

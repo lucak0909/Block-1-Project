@@ -29,6 +29,7 @@ public class AnimatedCpuClock {
         // Remove grid lines for a cleaner look
         clockChart.setHorizontalGridLinesVisible(false);
         clockChart.setVerticalGridLinesVisible(false);
+        clockChart.setLegendVisible(false);
 
         // Create a Series to hold the data
         clockSeries = new XYChart.Series<>();
