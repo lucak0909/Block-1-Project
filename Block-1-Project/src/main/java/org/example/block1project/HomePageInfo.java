@@ -8,8 +8,8 @@ import java.io.File;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.CentralProcessor;
+import oshi.hardware.GraphicsCard;
 import oshi.hardware.GlobalMemory;
-import oshi.software.os.OperatingSystem;
 
 public class HomePageInfo {
 
@@ -59,8 +59,8 @@ public class HomePageInfo {
         Label storageLabel = new Label(String.format("Storage: %.2f GiB used / %.2f GiB total",
                 bytesToGiB(usedStorage), bytesToGiB(totalStorage)));
 
-        // Gather graphics information (optional)
-        String graphicsInfo = getGraphicsInfo();
+        // Gather graphics information
+        String graphicsInfo = getGraphicsInfo(hal);
         Label graphicsLabel = new Label("Graphics: " + graphicsInfo);
 
         // Add storage and graphics information to the layout
@@ -87,10 +87,14 @@ public class HomePageInfo {
         return freeSpace;
     }
 
-    // Placeholder method for graphics information (can be enhanced further)
-    private String getGraphicsInfo() {
-        // This could be expanded with a library for detailed graphics info
-        return "Graphics information not fully available";
+    // Method to get graphics information
+    private String getGraphicsInfo(HardwareAbstractionLayer hal) {
+        StringBuilder graphicsInfo = new StringBuilder();
+        for (GraphicsCard gpu : hal.getGraphicsCards()) {
+            graphicsInfo.append(String.format("%s, VRam: %d GiB\n", gpu.getName(), (gpu.getVRam() / (1024 * 1024 * 1024))));
+            // You can add more details here if needed
+        }
+        return graphicsInfo.toString();
     }
 
     // Helper method to convert bytes to GiB for better readability

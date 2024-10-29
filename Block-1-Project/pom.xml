@@ -115,7 +115,7 @@
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-demo</artifactId>
-            <version>6.5.0</version>
+            <version>6.6.5</version>
         </dependency>
 
     </dependencies>
