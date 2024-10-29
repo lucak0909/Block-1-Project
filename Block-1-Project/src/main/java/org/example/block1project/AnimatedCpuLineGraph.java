@@ -8,6 +8,7 @@ import javafx.scene.chart.XYChart;
 import javafx.util.Duration;
 import java.lang.management.ManagementFactory;
 import com.sun.management.OperatingSystemMXBean;
+import oshi.hardware.Sensors;
 
 public class AnimatedCpuLineGraph {
 

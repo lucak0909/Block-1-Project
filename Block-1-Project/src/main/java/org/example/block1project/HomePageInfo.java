@@ -112,6 +112,9 @@ public class HomePageInfo {
         if (usbInfoBuilder.length() == 0) {
             return "No USB devices found";
         }
+        if (usbInfoBuilder.length()>=30){
+            usbInfoBuilder.insert(3,"/n");
+        }
 
         usbInfoBuilder.setLength(usbInfoBuilder.length() - 2);
         return usbInfoBuilder.toString();

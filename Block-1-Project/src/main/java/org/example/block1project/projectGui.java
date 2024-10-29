@@ -8,13 +8,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;  // Import VBox instead of StackPane
 import javafx.stage.Stage;
 
-public class projectGui extends Application {
+public class  projectGui extends Application {
 
     // Instances of the animated components
     private AnimatedCpuLineGraph cpuLineGraph;
     private AnimatedRamUsage ramUsage;
     private AnimatedCpuClock cpuClock;
     private HomePageInfo homePageInfo;
+    private CpuVoltage cpuVoltageGraph;
 
     @Override
     public void start(Stage primaryStage) {
@@ -23,10 +24,10 @@ public class projectGui extends Application {
         ramUsage = new AnimatedRamUsage();
         cpuClock = new AnimatedCpuClock();
         homePageInfo = new HomePageInfo();  // Home page system information
-
+        cpuVoltageGraph = new CpuVoltage();
         // Create a VBox for the CPU Tab layout
         VBox cpuPage = new VBox();  // Change to VBox
-        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClock.getClockChart());
+        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClock.getClockChart(), cpuVoltageGraph.getVoltageChart());
 
         // Create a TabPane as the main layout
         TabPane tabPane = new TabPane();
