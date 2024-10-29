@@ -7,7 +7,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.util.Duration;
 
-public class AnimatedCpuClock {
+public class CpuClockGraph {
 
     private XYChart.Series<Number, Number> clockSeries;  // Series to hold CPU clock data
     private int timeInMilliseconds = 0;  // Track elapsed time in milliseconds
@@ -17,7 +17,7 @@ public class AnimatedCpuClock {
 
     private LineChart<Number, Number> clockChart;
 
-    public AnimatedCpuClock() {
+    public CpuClockGraph() {
         // Create the X and Y axes
         NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);  // Last 10 seconds (graph time)
         NumberAxis yAxis = new NumberAxis(0, 100, 10);  // Y-axis range between 0 and 100 (percentage)

@@ -9,7 +9,7 @@ import javafx.util.Duration;
 import java.lang.management.ManagementFactory;
 import com.sun.management.OperatingSystemMXBean;
 
-public class AnimatedCpuLineGraph {
+public class CpuUsageGraph {
 
     private XYChart.Series<Number, Number> cpuSeries;
     private int timeInMilliseconds = 0;
@@ -18,7 +18,7 @@ public class AnimatedCpuLineGraph {
     private static final double TIME_SCALE = 0.7;
     private LineChart<Number, Number> lineChart;
 
-    public AnimatedCpuLineGraph() {
+    public CpuUsageGraph() {
         // Create the X and Y axes
         NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);
         NumberAxis yAxis = new NumberAxis(0, 100, 10);
