@@ -55,7 +55,7 @@ public class projectGui extends Application {
 
         // Create the scene and apply the CSS stylesheet
         Scene scene = new Scene(root, 1200, 600);
-        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());  // Apply the CSS file
+        scene.getStylesheets().add(getClass().getResource("/org/example/block1project/styles.css").toExternalForm());  // Apply the CSS file
 
         // Set up the stage
         primaryStage.setScene(scene);

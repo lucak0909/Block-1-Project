@@ -111,6 +111,13 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.oshi/oshi-demo -->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-demo</artifactId>
+            <version>6.5.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

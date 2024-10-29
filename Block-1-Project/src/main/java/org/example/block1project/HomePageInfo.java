@@ -5,16 +5,20 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.io.File;
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-import java.lang.management.ThreadMXBean;
+import oshi.SystemInfo;
+import oshi.hardware.HardwareAbstractionLayer;
+import oshi.hardware.CentralProcessor;
+import oshi.hardware.GlobalMemory;
+import oshi.software.os.OperatingSystem;
 
 public class HomePageInfo {
 
     private VBox homePageLayout;
+    private SystemInfo systemInfo;
 
     public HomePageInfo() {
         homePageLayout = new VBox(10);  // 10px spacing between elements
+        systemInfo = new SystemInfo();  // Initialize OSHI SystemInfo
 
         // Gather system information and update the home page
         Platform.runLater(this::updateHomePageInfo);
@@ -22,24 +26,24 @@ public class HomePageInfo {
 
     // Method to gather and update system information on the Home Page
     private void updateHomePageInfo() {
-        // Get system properties and operating system details
-        OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
-        ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+        // OSHI Hardware Abstraction Layer
+        HardwareAbstractionLayer hal = systemInfo.getHardware();
+        CentralProcessor cpu = hal.getProcessor();
+        GlobalMemory memory = hal.getMemory();
 
         // CPU Information
-        String cpuBrand = getCpuBrand();
-        int cpuCores = Runtime.getRuntime().availableProcessors();
-        int cpuThreads = threadBean.getThreadCount(); // Approximation of threads
-        String cpuClockSpeed = getCpuClockSpeed();
+        String cpuBrand = cpu.getProcessorIdentifier().getName();
+        int cpuCores = cpu.getLogicalProcessorCount();
+        double cpuLoad = cpu.getSystemCpuLoad(1000) * 100; // CPU load in percentage
 
         // Create labels for displaying the system information
-        Label cpuLabel = new Label(String.format("\nCPU: %s, %d cores, %d threads, Clock Speed: %s",
-                cpuBrand, cpuCores, cpuThreads, cpuClockSpeed));
+        Label cpuLabel = new Label(String.format("\nCPU: %s, %d cores, %.2f%% load",
+                cpuBrand, cpuCores, cpuLoad));
 
         // Memory Information
-        long totalMemory = Runtime.getRuntime().maxMemory();
-        long freeMemory = Runtime.getRuntime().freeMemory();
-        long usedMemory = totalMemory - freeMemory;
+        long totalMemory = memory.getTotal();
+        long availableMemory = memory.getAvailable();
+        long usedMemory = totalMemory - availableMemory;
 
         Label ramLabel = new Label(String.format("Memory: %.2f GiB used / %.2f GiB total",
                 bytesToGiB(usedMemory), bytesToGiB(totalMemory)));
@@ -47,8 +51,7 @@ public class HomePageInfo {
         // Add labels to the VBox layout
         homePageLayout.getChildren().addAll(cpuLabel, ramLabel);
 
-        // Optional: Add more system information (storage, graphics, etc.)
-        // Gather storage information
+        // Storage Information
         long totalStorage = getTotalDiskSpace();
         long freeStorage = getFreeDiskSpace();
         long usedStorage = totalStorage - freeStorage;
@@ -56,24 +59,12 @@ public class HomePageInfo {
         Label storageLabel = new Label(String.format("Storage: %.2f GiB used / %.2f GiB total",
                 bytesToGiB(usedStorage), bytesToGiB(totalStorage)));
 
-        // Gather graphics information
+        // Gather graphics information (optional)
         String graphicsInfo = getGraphicsInfo();
         Label graphicsLabel = new Label("Graphics: " + graphicsInfo);
 
         // Add storage and graphics information to the layout
         homePageLayout.getChildren().addAll(storageLabel, graphicsLabel);
-    }
-
-    // Method to get CPU brand (this can be platform-dependent)
-    private String getCpuBrand() {
-        // This is a placeholder; actual implementation would vary by OS
-        return "Intel/AMD"; // Ideally, you would use a library or command to get this information
-    }
-
-    // Method to get CPU clock speed (this can be platform-dependent)
-    private String getCpuClockSpeed() {
-        // Placeholder for actual clock speed retrieval
-        return "3.5 GHz"; // This should be dynamically retrieved in a real scenario
     }
 
     // Method to get total disk space
