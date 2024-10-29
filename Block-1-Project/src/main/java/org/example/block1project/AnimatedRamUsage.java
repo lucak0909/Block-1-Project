@@ -27,14 +27,20 @@ public class AnimatedRamUsage {
     public AnimatedRamUsage() {
         osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
 
-        // Create the Arcs for used and free RAM with larger radii
-        usedRamArc = new Arc(0, 0, 150, 150, 90, 0);  // Adjusted radius
-        usedRamArc.setType(ArcType.ROUND);
-        usedRamArc.setFill(Color.RED);  
+        // Set up the arcs to form a semi-circle (half-gauge)
+        usedRamArc = new Arc(0, 0, 150, 150, 180,0);  // Center (300,150), radius 150
+        usedRamArc.setType(ArcType.OPEN);  // Use OPEN instead of ROUND for a hollow look
+        usedRamArc.setStroke(Color.RED);
+        usedRamArc.setStrokeWidth(30);  // Set the desired thickness of the arc
+        usedRamArc.setFill(Color.TRANSPARENT);  // No fill to create the hollow center
 
-        freeRamArc = new Arc(0, 0, 150, 150, 90, 360);  // Adjusted radius
-        freeRamArc.setType(ArcType.ROUND);
-        freeRamArc.setFill(Color.GREEN);  
+        
+        freeRamArc = new Arc(0, 0, 150, 150, 360, 0);
+        freeRamArc.setType(ArcType.OPEN);
+        freeRamArc.setStroke(Color.GRAY);
+        freeRamArc.setStrokeWidth(30);
+        freeRamArc.setFill(Color.TRANSPARENT);
+         
 
         // Create labels for RAM usage
         usedRamText = new Text("Used: 0 GB");
@@ -57,11 +63,11 @@ public class AnimatedRamUsage {
         long freeMemory = osBean.getFreePhysicalMemorySize();
         long usedMemory = totalMemory - freeMemory;
 
-        double usedPercentage = ((double) usedMemory / totalMemory) * 360;
+        double usedPercentage = ((double) usedMemory / totalMemory) * 180;
 
         Platform.runLater(() -> {
             usedRamArc.setLength(-usedPercentage);
-            freeRamArc.setLength(360 - usedPercentage);
+            freeRamArc.setLength(180 - usedPercentage);
             usedRamText.setText(String.format("Used: %.2f GB", usedMemory / (1024.0 * 1024 * 1024)));
             freeRamText.setText(String.format("Free: %.2f GB", freeMemory / (1024.0 * 1024 * 1024)));
         });
