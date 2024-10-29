@@ -11,29 +11,29 @@ import javafx.stage.Stage;
 public class projectGui extends Application {
 
     // Instances of the animated components
-    private AnimatedCpuLineGraph cpuLineGraph;
-    private AnimatedRamUsage ramUsage;
-    private AnimatedCpuClock cpuClock;
-    private HomePageInfo homePageInfo;
+    private CpuUsageGraph cpuLineGraph;
+    private RamUsageGauge ramUsage;
+    private CpuClockGraph cpuClockGraph;
+    private Home home;
 
     @Override
     public void start(Stage primaryStage) {
         // Initialize animated components and home page info
-        cpuLineGraph = new AnimatedCpuLineGraph();
-        ramUsage = new AnimatedRamUsage();
-        cpuClock = new AnimatedCpuClock();
-        homePageInfo = new HomePageInfo();  // Home page system information
+        cpuLineGraph = new CpuUsageGraph();
+        ramUsage = new RamUsageGauge();
+        cpuClockGraph = new CpuClockGraph();
+        home = new Home();  // Home page system information
 
         // Create a VBox for the CPU Tab layout
         VBox cpuPage = new VBox();  // Change to VBox
-        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClock.getClockChart());
+        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClockGraph.getClockChart());
 
         // Create a TabPane as the main layout
         TabPane tabPane = new TabPane();
 
         // Create the Home Tab with general system information
         Tab homeTab = new Tab("Home");
-        homeTab.setContent(homePageInfo.getHomePageLayout());  // Use the VBox with system info
+        homeTab.setContent(home.getHomePageLayout());  // Use the VBox with system info
         homeTab.setClosable(false);  // Prevent closing the Home tab
 
         // Create the CPU Tab with both CPU load and CPU clock graphs
