@@ -5,11 +5,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.io.File;
+import java.util.List;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GraphicsCard;
 import oshi.hardware.GlobalMemory;
+import oshi.hardware.UsbDevice;
+import oshi.hardware.Sensors;
 
 public class HomePageInfo {
 
@@ -37,7 +40,7 @@ public class HomePageInfo {
         double cpuLoad = cpu.getSystemCpuLoad(1000) * 100; // CPU load in percentage
 
         // Create labels for displaying the system information
-        Label cpuLabel = new Label(String.format("\nCPU: %s, %d cores, %.2f%% load",
+        Label cpuLabel = new Label(String.format("CPU: %s, %d cores, %.2f%% load",
                 cpuBrand, cpuCores, cpuLoad));
 
         // Memory Information
@@ -48,9 +51,6 @@ public class HomePageInfo {
         Label ramLabel = new Label(String.format("Memory: %.2f GiB used / %.2f GiB total",
                 bytesToGiB(usedMemory), bytesToGiB(totalMemory)));
 
-        // Add labels to the VBox layout
-        homePageLayout.getChildren().addAll(cpuLabel, ramLabel);
-
         // Storage Information
         long totalStorage = getTotalDiskSpace();
         long freeStorage = getFreeDiskSpace();
@@ -59,12 +59,16 @@ public class HomePageInfo {
         Label storageLabel = new Label(String.format("Storage: %.2f GiB used / %.2f GiB total",
                 bytesToGiB(usedStorage), bytesToGiB(totalStorage)));
 
-        // Gather graphics information
+        // Graphics Information
         String graphicsInfo = getGraphicsInfo(hal);
         Label graphicsLabel = new Label("Graphics: " + graphicsInfo);
 
-        // Add storage and graphics information to the layout
-        homePageLayout.getChildren().addAll(storageLabel, graphicsLabel);
+        // USB Information
+        String usbInfo = getUSBInfo(hal);
+        Label usbInfoLabel = new Label("USB Devices: " + usbInfo);
+
+        // Add labels to the VBox layout
+        homePageLayout.getChildren().addAll(cpuLabel, ramLabel, storageLabel, graphicsLabel, usbInfoLabel);
     }
 
     // Method to get total disk space
@@ -91,10 +95,26 @@ public class HomePageInfo {
     private String getGraphicsInfo(HardwareAbstractionLayer hal) {
         StringBuilder graphicsInfo = new StringBuilder();
         for (GraphicsCard gpu : hal.getGraphicsCards()) {
-            graphicsInfo.append(String.format("%s, VRam: %d GiB\n", gpu.getName(), (gpu.getVRam() / (1024 * 1024 * 1024))));
-            // You can add more details here if needed
+            graphicsInfo.append(String.format("%s, VRam: %.2f GiB\n", gpu.getName(), (gpu.getVRam() / (1024.0 * 1024 * 1024))));
         }
         return graphicsInfo.toString();
+    }
+
+    // Method to get USB devices information
+    private String getUSBInfo(HardwareAbstractionLayer hal) {
+        StringBuilder usbInfoBuilder = new StringBuilder();
+        List<UsbDevice> usbDevices = hal.getUsbDevices(true);
+
+        for (UsbDevice usbDevice : usbDevices) {
+            usbInfoBuilder.append(String.format("%s (Vendor ID: %s), ", usbDevice.getName(), usbDevice.getVendorId()));
+        }
+
+        if (usbInfoBuilder.length() == 0) {
+            return "No USB devices found";
+        }
+
+        usbInfoBuilder.setLength(usbInfoBuilder.length() - 2);
+        return usbInfoBuilder.toString();
     }
 
     // Helper method to convert bytes to GiB for better readability
