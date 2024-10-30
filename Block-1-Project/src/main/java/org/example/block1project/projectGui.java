@@ -12,86 +12,74 @@ import javafx.stage.Stage;
 import java.awt.*;
 
 public class projectGui extends Application {
-
-    // Instances of the animated components
+    // Hardware monitoring components
     private CpuUsageGraph cpuLineGraph;
     private RamUsageGauge ramUsage;
-    private CpuUsageGauge cpuUsageGauge; // Add instance of CpuUsageGauge
+    private CpuUsageGauge cpuUsageGauge;
     private CpuClockGraph cpuClockGraph;
     private Home home;
-
     private Battery battery;
     private CpuTemperatureGraph cpuTemp;
     private FanSpeedGraph fan;
     private NetworkUsage network;
     private CpuFrequencyChart cpuFrequencyChart;
-
     private DiskReadWriteGraph diskReadWriteGraph;
 
     @Override
     public void start(Stage primaryStage) {
-        // Initialize animated components and home page info
+        // Initialising new objects to easily call functions later
         cpuLineGraph = new CpuUsageGraph();
         ramUsage = new RamUsageGauge();
-        cpuUsageGauge = new CpuUsageGauge(); // Initialize CpuUsageGauge
+        cpuUsageGauge = new CpuUsageGauge();
         cpuClockGraph = new CpuClockGraph();
-        home = new Home();  // Home page system information
-        battery = new Battery();  // Initialize battery status
+        home = new Home();
+        battery = new Battery();
         cpuTemp = new CpuTemperatureGraph();
-        //fan = new FanSpeedGraph();
         network = new NetworkUsage();
         cpuFrequencyChart = new CpuFrequencyChart();
         diskReadWriteGraph = new DiskReadWriteGraph();
 
-        // Create a VBox to hold battery information
-        VBox batteryVBox = new VBox(10); // 10 pixels of spacing between elements
+        // Centres the Battery information
+        VBox batteryVBox = new VBox(10);
         batteryVBox.setStyle("-fx-padding: 20; -fx-alignment: center;");
+        Battery.getBatteryInfo(batteryVBox);
 
-        // Retrieve and display battery information in batteryVBox
-        Battery.getBatteryInfo(batteryVBox);  // Pass the VBox as an argument
-
+        // Initialises a grid layout for the line graphs on the CPU Tab
         GridPane cpuPage = new GridPane();
-        cpuPage.setHgap(20); // Set horizontal gap between columns
-        cpuPage.setVgap(20); // Set vertical gap between rows
-        cpuPage.setStyle("-fx-padding: 20;"); // Add padding around the grid
+        cpuPage.setHgap(20);
+        cpuPage.setVgap(20);
+        cpuPage.setStyle("-fx-padding: 20;");
+        cpuPage.add(cpuLineGraph.getLineChart(), 0, 0);
+        cpuPage.add(cpuClockGraph.getClockChart(), 1, 0);
+        cpuPage.add(CpuTemperatureGraph.getLineChart(), 0, 1);
+        cpuPage.add(cpuFrequencyChart.getFrequencyChart(), 1, 1);
 
-        // Add CPU charts to the GridPane in a 2-column layout
-        cpuPage.add(cpuLineGraph.getLineChart(), 0, 0);         // Row 0, Column 0
-        cpuPage.add(cpuClockGraph.getClockChart(), 1, 0);       // Row 0, Column 1
-        cpuPage.add(CpuTemperatureGraph.getLineChart(), 0, 1);  // Row 1, Column 0
-        cpuPage.add(cpuFrequencyChart.getFrequencyChart(), 1, 1); // Row 1, Column 1
-
-        // Create a GridPane for the Memory tab
+        // Initialises the layout for the accelerometers on the Memory Tab
         GridPane memoryGrid = new GridPane();
         memoryGrid.setHgap(20);
         memoryGrid.setVgap(20);
-        memoryGrid.setStyle("-fx-padding: 20; -fx-alignment: center;"); // Add padding around the grid
+        memoryGrid.setStyle("-fx-padding: 20; -fx-alignment: center;");
+        memoryGrid.add(ramUsage.getRamUsagePane(), 0, 0);
+        memoryGrid.add(cpuUsageGauge.getCpuUsagePane(), 1, 0);
 
-        // Add RAM and CPU usage gauges to the memory grid
-        memoryGrid.add(ramUsage.getRamUsagePane(), 0, 0); // RAM usage gauge
-        memoryGrid.add(cpuUsageGauge.getCpuUsagePane(), 1, 0); // CPU usage gauge
-
-        // Create a TabPane as the main layout
+        // Creates the Tab Section
         TabPane tabPane = new TabPane();
 
-        // Create the Home Tab with general system information
+        // Creates a new Tab for each section of the project
         Tab homeTab = new Tab("Home");
-        homeTab.setContent(home.getHomePageLayout());  // Use the VBox with system info
-        homeTab.setClosable(false);  // Prevent closing the Home tab
+        homeTab.setContent(home.getHomePageLayout());
+        homeTab.setClosable(false);
 
-        // Create the CPU Tab with both CPU load and CPU clock graphs
         Tab cpuTab = new Tab("CPU");
-        cpuTab.setContent(cpuPage);  // Set the VBox as the content
-        cpuTab.setClosable(false);  // Prevent closing the CPU tab
+        cpuTab.setContent(cpuPage);
+        cpuTab.setClosable(false);
 
-        // Create a Memory Tab with RAM and CPU usage gauges
         Tab memoryTab = new Tab("Memory");
-        memoryTab.setContent(memoryGrid);  // Set the memory grid as the content
-        memoryTab.setClosable(false);  // Prevent closing the Memory tab
+        memoryTab.setContent(memoryGrid);
+        memoryTab.setClosable(false);
 
-        // Create a Battery Tab and set batteryVBox as its content
         Tab batteryTab = new Tab("Battery");
-        batteryTab.setContent(batteryVBox);  // Display battery information in the tab
+        batteryTab.setContent(batteryVBox);
         batteryTab.setClosable(false);
 
         Tab networkTab = new Tab("Network");
@@ -102,20 +90,17 @@ public class projectGui extends Application {
         diskTab.setContent(diskReadWriteGraph.getDiskReadWriteCharts());
         diskTab.setClosable(false);
 
-        // Add all tabs to the TabPane
         tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab, batteryTab, networkTab, diskTab);
 
-        // Create the main layout and set the TabPane as the center
         BorderPane root = new BorderPane();
         root.setCenter(tabPane);
 
-        // Create the scene and apply the CSS stylesheet
+        // Creates the stage
         Scene scene = new Scene(root, 1200, 600);
-        scene.getStylesheets().add(getClass().getResource("/org/example/block1project/styles.css").toExternalForm());  // Apply the CSS file
+        scene.getStylesheets().add(getClass().getResource("/org/example/block1project/styles.css").toExternalForm()); // References CSS code
 
-        // Set up the stage
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Hardware Monitor GUI");
+        primaryStage.setTitle("Hardware Monitor");
         primaryStage.show();
     }
 
