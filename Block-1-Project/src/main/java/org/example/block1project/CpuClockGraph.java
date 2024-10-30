@@ -10,78 +10,71 @@ import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 
 public class CpuClockGraph {
+    private XYChart.Series<Number, Number> clockSeries;  // Holds the CPU clock speed data
+    private int timeInMilliseconds = 0;  // Keeps track of elapsed time
+    private static final int MAX_TIME_RANGE = 10000;  // Display last 10 seconds
+    private static final int UPDATE_INTERVAL = 100;   // Update every 100 milliseconds
+    private static final double TIME_SCALE = 0.7;     // Makes time run a bit faster
 
-    private XYChart.Series<Number, Number> clockSeries;  // Series to hold CPU clock data
-    private int timeInMilliseconds = 0;  // Track elapsed time in milliseconds
-    private static final int MAX_TIME_RANGE = 10000;  // Show the last 10 "graph seconds"
-    private static final int UPDATE_INTERVAL = 100;   // Update interval (100ms)
-    private static final double TIME_SCALE = 0.7;     // Faster time scale (70% of real-time speed)
-
-    private LineChart<Number, Number> clockChart;
-    private CentralProcessor processor;  // CentralProcessor object to get CPU information
-    private long[] previousTicks;  // Array to store previous CPU ticks
+    private LineChart<Number, Number> clockChart;  // The chart for displaying the data
+    private CentralProcessor processor;  // Interface to get CPU info
+    private long[] previousTicks;  // Previous CPU ticks for load calculations
 
     public CpuClockGraph() {
-        // Initialize OSHI and get the CentralProcessor instance
+        // Get system info and the CentralProcessor instance
         SystemInfo systemInfo = new SystemInfo();
         processor = systemInfo.getHardware().getProcessor();
-        previousTicks = processor.getSystemCpuLoadTicks();  // Get initial ticks
+        previousTicks = processor.getSystemCpuLoadTicks();  // Initial ticks
 
-        // Create the X and Y axes
-        NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);  // Last 10 seconds (graph time)
-        NumberAxis yAxis = new NumberAxis(0, 100, 10);  // Y-axis range between 0 and 100 (percentage)
+        // Set up the X and Y axes for the chart
+        NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);  // X-axis for time
+        NumberAxis yAxis = new NumberAxis(0, 100, 10);  // Y-axis for CPU load percentage
 
-        // Create a LineChart to display CPU clock speed over time
+        // Create the line chart and set its title
         clockChart = new LineChart<>(xAxis, yAxis);
         clockChart.setTitle("CPU Clock Speed");
 
-        // Remove grid lines for a cleaner look
+        // Clean up the chart appearance
         clockChart.setHorizontalGridLinesVisible(false);
         clockChart.setVerticalGridLinesVisible(false);
         clockChart.setLegendVisible(false);
 
-        // Create a Series to hold the data
+        // Prepare the series for the clock speed data
         clockSeries = new XYChart.Series<>();
         clockSeries.setName("CPU Clock Speed");
-
-        // Add the series to the LineChart
         clockChart.getData().add(clockSeries);
-        clockChart.setCreateSymbols(false);  // Disable symbols on data points (just the line)
+        clockChart.setCreateSymbols(false);  // Just show the line, no symbols
 
-        // Start a Timeline to update the clock speed regularly (every 0.1 seconds for smooth transitions)
+        // Start a timeline to update the clock speed every 0.1 seconds
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(UPDATE_INTERVAL), event -> updateCpuClockSpeed())
+            new KeyFrame(Duration.millis(UPDATE_INTERVAL), event -> updateCpuClockSpeed())
         );
-        timeline.setCycleCount(Timeline.INDEFINITE);  // Run indefinitely
-        timeline.play();  // Start the animation
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();  // Kick off the timeline
     }
 
-    // Method to update the CPU clock speed and add data to the graph
     private void updateCpuClockSpeed() {
-        // Get the current CPU load using the previous ticks
-        long[] currentTicks = processor.getSystemCpuLoadTicks();  // Get current ticks
-        double clockSpeed = processor.getSystemCpuLoadBetweenTicks(previousTicks) * 100;  // Get CPU load in percentage
+        long[] currentTicks = processor.getSystemCpuLoadTicks();  // Get current CPU ticks
+        double clockSpeed = processor.getSystemCpuLoadBetweenTicks(previousTicks) * 100;  // Calculate CPU load percentage
 
-        // Update previous ticks for the next calculation
-        previousTicks = currentTicks;
+        previousTicks = currentTicks;  // Update previous ticks for next round
 
-        // Add the clock speed to the series (with time on the X-axis, adjusted by TIME_SCALE)
+        // Add current clock speed to the series
         clockSeries.getData().add(new XYChart.Data<>((timeInMilliseconds * TIME_SCALE / 1000.0), clockSpeed));
 
-        // Increment the time counter
-        timeInMilliseconds += UPDATE_INTERVAL;
+        timeInMilliseconds += UPDATE_INTERVAL;  // Update the time
 
-        // Remove old data points to keep the X-axis range constant (last 10 seconds in graph time)
+        // Remove old data points to keep the graph fresh
         if (timeInMilliseconds * TIME_SCALE > MAX_TIME_RANGE) {
-            clockSeries.getData().remove(0);  // Remove the oldest data point
+            clockSeries.getData().remove(0);  // Drop the oldest data point
         }
 
-        // Update the X-axis range to keep showing the last 10 seconds (in graph time)
+        // Adjust the X-axis to show the last 10 seconds
         ((NumberAxis) clockSeries.getChart().getXAxis()).setLowerBound((timeInMilliseconds * TIME_SCALE - MAX_TIME_RANGE) / 1000.0);
         ((NumberAxis) clockSeries.getChart().getXAxis()).setUpperBound((timeInMilliseconds * TIME_SCALE) / 1000.0);
     }
 
-    // Method to return the LineChart for embedding in the GUI
+    // Get the LineChart for embedding in the UI
     public LineChart<Number, Number> getClockChart() {
         return clockChart;
     }

@@ -50,7 +50,7 @@ public class CpuUsageGraph {
         timeline.play();
     }
 
-    // Method to update the CPU usage and add data to the graph
+    // Updates the CPU usage and add data to the graph
     private void updateCpuUsage() {
         OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
         double cpuUsage = osBean.getSystemCpuLoad() * 100;
@@ -66,7 +66,7 @@ public class CpuUsageGraph {
         ((NumberAxis) cpuSeries.getChart().getXAxis()).setUpperBound((timeInMilliseconds * TIME_SCALE) / 1000.0);
     }
 
-    // Method to return the LineChart for embedding in other GUIs
+    // Return the LineChart for embedding in other GUIs
     public LineChart<Number, Number> getLineChart() {
         return lineChart;
     }

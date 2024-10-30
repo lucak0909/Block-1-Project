@@ -24,7 +24,6 @@ public class Battery {
             return;
         }
 
-
         // Display battery information for each power source
         for (PowerSource battery : powerSources) {
             double current = battery.getCurrentCapacity();

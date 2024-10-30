@@ -12,73 +12,61 @@ import oshi.hardware.HardwareAbstractionLayer;
 
 public class CpuFrequencyChart {
 
-    private XYChart.Series<Number, Number> frequencySeries;  // Series to hold CPU frequency data
-    private int timeInMilliseconds = 0;  // Track elapsed time in milliseconds
-    private static final int MAX_TIME_RANGE = 10000;  // Show the last 10 "graph seconds"
-    private static final int UPDATE_INTERVAL = 100;   // Update interval (100ms)
-    private static final double TIME_SCALE = 0.7;     // Faster time scale (70% of real-time speed)
-    private CentralProcessor processor;
-    private LineChart<Number, Number> frequencyChart;
+    private XYChart.Series<Number, Number> frequencySeries;  // Holds the data points for CPU frequency
+    private int timeInMilliseconds = 0;  // Keeps track of the elapsed time
+    private static final int MAX_TIME_RANGE = 10000;  // Display the last 10 seconds on the graph
+    private static final int UPDATE_INTERVAL = 100;  // Update the graph every 100 milliseconds
+    private static final double TIME_SCALE = 0.7;  // Scale to speed up the time representation
+    private CentralProcessor processor;  // Represents the CPU
+    private LineChart<Number, Number> frequencyChart;  // Chart to visualize CPU frequency
 
     public CpuFrequencyChart() {
-        SystemInfo systemInfo = new SystemInfo();
-        HardwareAbstractionLayer hal = systemInfo.getHardware();
-        processor = hal.getProcessor();
+        SystemInfo systemInfo = new SystemInfo();  // Create an instance to fetch system info
+        HardwareAbstractionLayer hal = systemInfo.getHardware();  // Get the hardware layer
+        processor = hal.getProcessor();  // Access the CPU information
 
-        // Create the X and Y axes
-        NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);  // Last 10 seconds (graph time)
-        NumberAxis yAxis = new NumberAxis(0, 5, 0.5);  // Y-axis range between 0 and 5 GHz
+        NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);  // X-axis for time in seconds
+        NumberAxis yAxis = new NumberAxis(0, 5, 0.5);  // Y-axis for frequency (0 to 5 GHz)
 
-        // Create a LineChart to display CPU frequency over time
-        frequencyChart = new LineChart<>(xAxis, yAxis);
-        frequencyChart.setTitle("CPU Max Frequency over time (GHz)");
+        frequencyChart = new LineChart<>(xAxis, yAxis);  // Initialize the line chart
+        frequencyChart.setTitle("CPU Max Frequency over time (GHz)");  // Set chart title
 
-        // Remove grid lines for a cleaner look
-        frequencyChart.setHorizontalGridLinesVisible(false);
+        frequencyChart.setHorizontalGridLinesVisible(false);  // Clean look without grid lines
         frequencyChart.setVerticalGridLinesVisible(false);
-        frequencyChart.setLegendVisible(false);
+        frequencyChart.setLegendVisible(false);  // Hide the legend
 
-        // Create a Series to hold the data
-        frequencySeries = new XYChart.Series<>();
-        frequencySeries.setName("CPU Max Frequency (GHz)");
+        frequencySeries = new XYChart.Series<>();  // Create a series for data points
+        frequencySeries.setName("CPU Max Frequency (GHz)");  // Name of the series
 
-        // Add the series to the LineChart
-        frequencyChart.getData().add(frequencySeries);
-        frequencyChart.setCreateSymbols(false);  // Disable symbols on data points (just the line)
-        frequencyChart.setId("cpuClockChart");
+        frequencyChart.getData().add(frequencySeries);  // Add the series to the chart
+        frequencyChart.setCreateSymbols(false);  // Only show the line, no symbols
+        frequencyChart.setId("cpuClockChart");  // Set an ID for the chart
 
-        // Start a Timeline to update the frequency regularly (every 0.1 seconds for smooth transitions)
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(UPDATE_INTERVAL), event -> updateCpuFrequency())
+                new KeyFrame(Duration.millis(UPDATE_INTERVAL), event -> updateCpuFrequency())  // Define update action
         );
-        timeline.setCycleCount(Timeline.INDEFINITE);  // Run indefinitely
-        timeline.play();  // Start the animation
+        timeline.setCycleCount(Timeline.INDEFINITE);  // Run the timeline indefinitely
+        timeline.play();  // Start updating the chart
     }
 
-    // Method to update the CPU frequency and add data to the graph
     private void updateCpuFrequency() {
-        // Get the max CPU frequency in GHz
-        double maxFrequency = processor.getMaxFreq() / 1_000_000_000.0;  // Convert Hz to GHz
-        //System.out.println("Max CPU Frequency: " + maxFrequency + " GHz");
+        double maxFrequency = processor.getMaxFreq() / 1_000_000_000.0;  // Get max frequency in GHz
 
-        // Add the frequency to the series (with time on the X-axis, adjusted by TIME_SCALE)
-        frequencySeries.getData().add(new XYChart.Data<>((timeInMilliseconds * TIME_SCALE / 1000.0), maxFrequency));
+        frequencySeries.getData().add(new XYChart.Data<>((timeInMilliseconds * TIME_SCALE / 1000.0), maxFrequency));  // Add data point
 
-        // Increment the time counter
-        timeInMilliseconds += UPDATE_INTERVAL;
+        timeInMilliseconds += UPDATE_INTERVAL;  // Increment time tracker
 
-        // Remove old data points to keep the X-axis range constant (last 10 seconds in graph time)
+        // Remove old data to keep the chart focused on the last 10 seconds
         if (timeInMilliseconds * TIME_SCALE > MAX_TIME_RANGE) {
-            frequencySeries.getData().remove(0);  // Remove the oldest data point
+            frequencySeries.getData().remove(0);  // Remove the oldest point
         }
 
-        // Update the X-axis range to keep showing the last 10 seconds (in graph time)
+        // Update the X-axis bounds to reflect the time range
         ((NumberAxis) frequencySeries.getChart().getXAxis()).setLowerBound((timeInMilliseconds * TIME_SCALE - MAX_TIME_RANGE) / 1000.0);
         ((NumberAxis) frequencySeries.getChart().getXAxis()).setUpperBound((timeInMilliseconds * TIME_SCALE) / 1000.0);
     }
 
-    // Method to return the LineChart for embedding in the GUI
     public LineChart<Number, Number> getFrequencyChart() {
-        return frequencyChart;
+        return frequencyChart;  // Return the chart for GUI embedding
     }
 }

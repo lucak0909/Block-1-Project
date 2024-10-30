@@ -26,7 +26,7 @@ public class CpuUsageGauge {
     private Text freeCpuText;  // Text to display free CPU
     private Label cpuUsageLabel;  // Label for CPU usage
 
-    private long[] prevTicks;  // Array to store previous CPU ticks
+    private long[] prevTicks;
 
     public CpuUsageGauge() {
         // Initialize OSHI components
