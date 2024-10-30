@@ -8,7 +8,6 @@ import javafx.scene.chart.XYChart;
 import javafx.util.Duration;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
-import oshi.hardware.HardwareAbstractionLayer;
 
 public class CpuClockGraph {
 
@@ -17,25 +16,24 @@ public class CpuClockGraph {
     private static final int MAX_TIME_RANGE = 10000;  // Show the last 10 "graph seconds"
     private static final int UPDATE_INTERVAL = 100;   // Update interval (100ms)
     private static final double TIME_SCALE = 0.7;     // Faster time scale (70% of real-time speed)
-    private SystemInfo systemInfo;
-    private CentralProcessor processor;
-    private LineChart<Number, Number> clockChart;
 
+    private LineChart<Number, Number> clockChart;
+    private CentralProcessor processor;  // CentralProcessor object to get CPU information
+    private long[] previousTicks;  // Array to store previous CPU ticks
 
     public CpuClockGraph() {
+        // Initialize OSHI and get the CentralProcessor instance
+        SystemInfo systemInfo = new SystemInfo();
+        processor = systemInfo.getHardware().getProcessor();
+        previousTicks = processor.getSystemCpuLoadTicks();  // Get initial ticks
+
         // Create the X and Y axes
         NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);  // Last 10 seconds (graph time)
-        NumberAxis yAxis = new NumberAxis(0, 5, 10);
-
-
-        systemInfo = new SystemInfo();
-        HardwareAbstractionLayer hal = systemInfo.getHardware();
-        processor = hal.getProcessor();
-
+        NumberAxis yAxis = new NumberAxis(0, 100, 10);  // Y-axis range between 0 and 100 (percentage)
 
         // Create a LineChart to display CPU clock speed over time
         clockChart = new LineChart<>(xAxis, yAxis);
-        clockChart.setTitle("CPU Clock Speed over Time (GHz)");
+        clockChart.setTitle("CPU Clock Speed");
 
         // Remove grid lines for a cleaner look
         clockChart.setHorizontalGridLinesVisible(false);
@@ -49,10 +47,10 @@ public class CpuClockGraph {
         // Add the series to the LineChart
         clockChart.getData().add(clockSeries);
         clockChart.setCreateSymbols(false);  // Disable symbols on data points (just the line)
-        clockChart.setId("cpuClockChart");
+
         // Start a Timeline to update the clock speed regularly (every 0.1 seconds for smooth transitions)
         Timeline timeline = new Timeline(
-            new KeyFrame(Duration.millis(UPDATE_INTERVAL), event -> updateCpuClockSpeed())
+                new KeyFrame(Duration.millis(UPDATE_INTERVAL), event -> updateCpuClockSpeed())
         );
         timeline.setCycleCount(Timeline.INDEFINITE);  // Run indefinitely
         timeline.play();  // Start the animation
@@ -60,19 +58,15 @@ public class CpuClockGraph {
 
     // Method to update the CPU clock speed and add data to the graph
     private void updateCpuClockSpeed() {
-        // Get the current frequencies of the CPU
-        long[] clockSpeed = processor.getCurrentFreq();
+        // Get the current CPU load using the previous ticks
+        long[] currentTicks = processor.getSystemCpuLoadTicks();  // Get current ticks
+        double clockSpeed = processor.getSystemCpuLoadBetweenTicks(previousTicks) * 100;  // Get CPU load in percentage
 
-        // Calculate average clock speed
-        long averageClockSpeed = 0;
-        for (long speed : clockSpeed) {
-            averageClockSpeed += speed;
-        }
-        averageClockSpeed /= clockSpeed.length; // Average frequency
-        averageClockSpeed /= 1000000000;
-        //System.out.println(averageClockSpeed);
+        // Update previous ticks for the next calculation
+        previousTicks = currentTicks;
+
         // Add the clock speed to the series (with time on the X-axis, adjusted by TIME_SCALE)
-        clockSeries.getData().add(new XYChart.Data<>((timeInMilliseconds * TIME_SCALE / 1000.0), averageClockSpeed));
+        clockSeries.getData().add(new XYChart.Data<>((timeInMilliseconds * TIME_SCALE / 1000.0), clockSpeed));
 
         // Increment the time counter
         timeInMilliseconds += UPDATE_INTERVAL;

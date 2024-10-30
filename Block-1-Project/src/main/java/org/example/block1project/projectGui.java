@@ -8,6 +8,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.awt.*;
+
 public class projectGui extends Application {
 
     // Instances of the animated components
@@ -15,8 +17,9 @@ public class projectGui extends Application {
     private RamUsageGauge ramUsage;
     private CpuClockGraph cpuClockGraph;
     private Home home;
-    //private Battery battery;
+    private Battery battery;
     private CpuTemperatureGraph cpuTemp;
+    private FanSpeedGraph fan;
 
     private CpuFrequencyChart cpuFrequencyChart;
     @Override
@@ -26,18 +29,19 @@ public class projectGui extends Application {
         ramUsage = new RamUsageGauge();
         cpuClockGraph = new CpuClockGraph();
         home = new Home();  // Home page system information
+        battery = new Battery();  // Initialize battery status#
         cpuTemp = new CpuTemperatureGraph();
-       // battery = new Battery();  // Initialize battery status
 
         // Create a VBox to hold battery information
         VBox batteryVBox = new VBox(10); // 10 pixels of spacing between elements
         batteryVBox.setStyle("-fx-padding: 20; -fx-alignment: center;");
 
-        cpuFrequencyChart = new CpuFrequencyChart();
+        // Retrieve and display battery information in batteryVBox
+        Battery.getBatteryInfo(batteryVBox);  // Pass the VBox as an argument
+
         // Create a VBox for the CPU Tab layout
         VBox cpuPage = new VBox();  // Change to VBox
-        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClockGraph.getClockChart(), cpuFrequencyChart.getFrequencyChart(),cpuTemp.getLineChart());
-        //cpuPage.getStylesheets().add(getClass().getResource("org/example/block1project/styles.css").toExternalForm());
+        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClockGraph.getClockChart(), CpuTemperatureGraph.getLineChart());
 
         // Create a TabPane as the main layout
         TabPane tabPane = new TabPane();

@@ -6,6 +6,9 @@ import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.CentralProcessor;
@@ -33,6 +36,7 @@ public class Home {
         HardwareAbstractionLayer hal = systemInfo.getHardware();
         CentralProcessor cpu = hal.getProcessor();
         GlobalMemory memory = hal.getMemory();
+        OperatingSystem os = systemInfo.getOperatingSystem();
 
         // Motherboard Info
         Baseboard baseboard = hal.getComputerSystem().getBaseboard();
@@ -40,13 +44,19 @@ public class Home {
         String model = baseboard.getModel();
         String serialNumber = baseboard.getSerialNumber();
         String version = baseboard.getVersion();
+        // OS Information
+        String osInfo = String.format("\nOS: %s %s (%s), Uptime: %s",
+                os.getFamily(),
+                os.getVersionInfo().getVersion(),
+                os.getManufacturer(),
+                formatUptime(os.getSystemUptime()));
+        Label osLabel = new Label(osInfo);
 
         // CPU Information
         String cpuBrand = cpu.getProcessorIdentifier().getName();
         int cpuCores = cpu.getLogicalProcessorCount();
         double cpuLoad = cpu.getSystemCpuLoad(1000) * 100; // CPU load in percentage
 
-        // Create labels for displaying the system information
         Label cpuLabel = new Label(String.format("CPU: %s, %d cores, %.2f%% load",
                 cpuBrand, cpuCores, cpuLoad));
 
@@ -106,7 +116,7 @@ public class Home {
     private String getGraphicsInfo(HardwareAbstractionLayer hal) {
         StringBuilder graphicsInfo = new StringBuilder();
         for (GraphicsCard gpu : hal.getGraphicsCards()) {
-            graphicsInfo.append(String.format("%s, VRam: %.2f GiB\n", gpu.getName(), (gpu.getVRam() / (1024.0 * 1024 * 1024))));
+            graphicsInfo.append(String.format("%s, VRam: %.2f GiB\n", gpu.getName(), bytesToGiB(gpu.getVRam())));
         }
         return graphicsInfo.toString();
     }
