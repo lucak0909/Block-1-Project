@@ -97,6 +97,7 @@ public class CpuUsageGauge {
 
     public Pane getCpuUsagePane() {
         VBox vbox = new VBox(10);
+        vbox.setStyle("-fx-alignment: center;"); // Center alignment for VBox
 
         Region spacer = new Region();
         spacer.setPrefHeight(40); // Set the height of the spacer
@@ -106,8 +107,8 @@ public class CpuUsageGauge {
         arcPane.getChildren().addAll(freeCpuArc, usedCpuArc);
 
         // Center the arcs in the pane
-        double centerX = 590;  // Center for 600x600 pane
-        double centerY = 150;  // Centered vertically
+        double centerX = 250;  // Center for a 600 width pane
+        double centerY = 200;  // Centered vertically
         usedCpuArc.setTranslateX(centerX);
         usedCpuArc.setTranslateY(centerY);
         freeCpuArc.setTranslateX(centerX);
@@ -117,8 +118,6 @@ public class CpuUsageGauge {
         arcPane.setStyle("-fx-alignment: center;");  // Center alignment for Pane
 
         vbox.getChildren().add(arcPane);
-        vbox.setStyle("-fx-alignment: center;");  // Center VBox contents
-
         return vbox;
     }
 }

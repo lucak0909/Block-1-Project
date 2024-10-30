@@ -100,9 +100,9 @@ public class RamUsageGauge {
         Pane arcPane = new Pane();
         arcPane.getChildren().addAll(freeRamArc, usedRamArc);
 
-        // Center the arcs in the pane
-        double centerX = 590;  // Center for 600x600 pane
-        double centerY = 150;  // Centered vertically
+        //Center the arcs in the pane
+        double centerX = 250;  // Center for 600x600 pane
+        double centerY = 200;  // Centered vertically
         usedRamArc.setTranslateX(centerX);
         usedRamArc.setTranslateY(centerY);
         freeRamArc.setTranslateX(centerX);
