@@ -10,7 +10,7 @@ import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.HardwareAbstractionLayer;
 
-public class CpuClockGraph {
+public class AnimatedCpuClock {
 
     private XYChart.Series<Number, Number> clockSeries;  // Series to hold CPU clock data
     private int timeInMilliseconds = 0;  // Track elapsed time in milliseconds
@@ -21,7 +21,7 @@ public class CpuClockGraph {
     private CentralProcessor processor;
     private LineChart<Number, Number> clockChart;
 
-    public CpuClockGraph() {
+    public AnimatedCpuClock() {
         // Create the X and Y axes
         NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);  // Last 10 seconds (graph time)
         NumberAxis yAxis = new NumberAxis(0, 5, 10);

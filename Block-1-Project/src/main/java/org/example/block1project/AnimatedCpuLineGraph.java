@@ -10,7 +10,7 @@ import java.lang.management.ManagementFactory;
 import com.sun.management.OperatingSystemMXBean;
 import oshi.hardware.Sensors;
 
-public class CpuUsageGraph {
+public class AnimatedCpuLineGraph {
 
     private XYChart.Series<Number, Number> cpuSeries;
     private int timeInMilliseconds = 0;
@@ -19,7 +19,7 @@ public class CpuUsageGraph {
     private static final double TIME_SCALE = 0.7;
     private LineChart<Number, Number> lineChart;
 
-    public CpuUsageGraph() {
+    public AnimatedCpuLineGraph() {
         // Create the X and Y axes
         NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);
         NumberAxis yAxis = new NumberAxis(0, 100, 10);

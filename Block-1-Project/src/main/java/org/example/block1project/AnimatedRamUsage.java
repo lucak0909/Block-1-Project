@@ -17,7 +17,7 @@ import oshi.SystemInfo;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HardwareAbstractionLayer;
 
-public class RamUsageGauge {
+public class AnimatedRamUsage {
 
     private Arc usedRamArc;  // Arc representing used RAM
     private Arc freeRamArc;  // Arc representing free RAM
@@ -26,7 +26,7 @@ public class RamUsageGauge {
     private Text freeRamText;  // Text to display free RAM
     private Label ramUsageLabel;  // Label for RAM usage
 
-    public RamUsageGauge() {
+    public AnimatedRamUsage() {
         // Initialize OSHI components
         SystemInfo systemInfo = new SystemInfo();
         HardwareAbstractionLayer hal = systemInfo.getHardware();
