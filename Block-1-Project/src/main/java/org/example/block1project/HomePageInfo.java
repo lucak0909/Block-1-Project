@@ -12,7 +12,7 @@ import oshi.hardware.CentralProcessor;
 import oshi.hardware.GraphicsCard;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.UsbDevice;
-import oshi.hardware.Sensors;
+import oshi.hardware.Baseboard;
 
 public class HomePageInfo {
 
@@ -20,7 +20,7 @@ public class HomePageInfo {
     private SystemInfo systemInfo;
 
     public HomePageInfo() {
-        homePageLayout = new VBox(10);  // 10px spacing between elements
+        homePageLayout = new VBox(20);  // 20px spacing between elements
         systemInfo = new SystemInfo();  // Initialize OSHI SystemInfo
 
         // Gather system information and update the home page
@@ -33,6 +33,13 @@ public class HomePageInfo {
         HardwareAbstractionLayer hal = systemInfo.getHardware();
         CentralProcessor cpu = hal.getProcessor();
         GlobalMemory memory = hal.getMemory();
+
+        // Motherboard Info
+        Baseboard baseboard = hal.getComputerSystem().getBaseboard();
+        String manufacturer = baseboard.getManufacturer();
+        String model = baseboard.getModel();
+        String serialNumber = baseboard.getSerialNumber();
+        String version = baseboard.getVersion();
 
         // CPU Information
         String cpuBrand = cpu.getProcessorIdentifier().getName();
@@ -67,8 +74,12 @@ public class HomePageInfo {
         String usbInfo = getUSBInfo(hal);
         Label usbInfoLabel = new Label("USB Devices: " + usbInfo);
 
+        // Motherboard Info
+        Label motherboardInfoLabel = new Label(String.format("Motherboard: %s%n Model: %s%n Serial: %s%n Version: %s",
+                manufacturer, model, serialNumber, version));
+
         // Add labels to the VBox layout
-        homePageLayout.getChildren().addAll(cpuLabel, ramLabel, storageLabel, graphicsLabel, usbInfoLabel);
+        homePageLayout.getChildren().addAll(cpuLabel, ramLabel, storageLabel, graphicsLabel, usbInfoLabel, motherboardInfoLabel);
     }
 
     // Method to get total disk space
@@ -105,17 +116,21 @@ public class HomePageInfo {
         StringBuilder usbInfoBuilder = new StringBuilder();
         List<UsbDevice> usbDevices = hal.getUsbDevices(true);
 
-        for (UsbDevice usbDevice : usbDevices) {
-            usbInfoBuilder.append(String.format("%s (Vendor ID: %s), ", usbDevice.getName(), usbDevice.getVendorId()));
+        for (int i = 0; i < usbDevices.size(); i++) {
+            UsbDevice usbDevice = usbDevices.get(i);
+            usbInfoBuilder.append(String.format("%s (Vendor ID: %s)", usbDevice.getName(), usbDevice.getVendorId()));
+            // Add a line break for every 3 devices for better readability
+            if ((i + 1) % 3 == 0 && (i + 1) < usbDevices.size()) {
+                usbInfoBuilder.append("\n");
+            } else {
+                usbInfoBuilder.append(", ");
+            }
         }
 
         if (usbInfoBuilder.length() == 0) {
             return "No USB devices found";
         }
-        if (usbInfoBuilder.length()>=30){
-            usbInfoBuilder.insert(3,"/n");
-        }
-
+        // Remove the trailing comma and space
         usbInfoBuilder.setLength(usbInfoBuilder.length() - 2);
         return usbInfoBuilder.toString();
     }

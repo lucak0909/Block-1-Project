@@ -35,7 +35,7 @@ public class AnimatedRamUsage {
         // Set up the arcs to form a semi-circle (half-gauge)
         usedRamArc = new Arc(0, 0, 150, 150, 180, 0);  // Center (0,0), radius 150
         usedRamArc.setType(ArcType.OPEN);  // Use OPEN instead of ROUND for a hollow look
-        usedRamArc.setStroke(Color.RED);
+        usedRamArc.setStroke(Color.web("#BB86FC"));
         usedRamArc.setStrokeWidth(30);  // Set the desired thickness of the arc
         usedRamArc.setFill(Color.TRANSPARENT);  // No fill to create the hollow center
 
