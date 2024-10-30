@@ -39,14 +39,14 @@ public class NetworkUsage {
             Label ipv6Label = new Label("IPv6: " + String.join(", ", net.getIPv6addr()));
 
             // Set text color for each label
-            nameLabel.setStyle("-fx-text-fill: white;");
-            macLabel.setStyle("-fx-text-fill: white;");
-            ipv4Label.setStyle("-fx-text-fill: white;");
-            ipv6Label.setStyle("-fx-text-fill: white;");
+            nameLabel.setStyle("-fx-text-fill: black; ");
+            macLabel.setStyle("-fx-text-fill: black;");
+            ipv4Label.setStyle("-fx-text-fill: black;");
+            ipv6Label.setStyle("-fx-text-fill: black;");
 
             // Real-time speed label (initially set to 0 KB/s)
             Label speedLabel = new Label("Current Speed: 0 KB/s");
-            speedLabel.setStyle("-fx-text-fill: white;");
+            speedLabel.setStyle("-fx-text-fill: black;");
             networkSpeedLabels.put(net, speedLabel);
 
             // Layout for each interface's information
@@ -59,13 +59,13 @@ public class NetworkUsage {
         networkInfoBox = new VBox(10, new Label("Network Interface Information"), infoLabels);
         networkInfoBox.setPadding(new Insets(20));
         networkInfoBox.setAlignment(Pos.CENTER);
-        networkInfoBox.setStyle("-fx-background-color: #2b2b2b;");  // Dark background for the VBox
+        networkInfoBox.setStyle("-fx-background-color: #DDDDDD; -fx-font-weight: bold;");  // Dark background for the VBox
 
         // Wrap the network information in a ScrollPane to enable scrolling
         scrollableNetworkInfo = new ScrollPane(networkInfoBox);
         scrollableNetworkInfo.setFitToWidth(true);
         scrollableNetworkInfo.setPadding(new Insets(10));
-        scrollableNetworkInfo.setStyle("-fx-background: #2b2b2b; -fx-border-color: transparent;");  // Dark background for ScrollPane
+        scrollableNetworkInfo.setStyle("-fx-background: #2b2b2b; -fx-border-color: transparent; -fx-background-radius: 10;");  // Dark background for ScrollPane
 
         // Start updating network data at intervals
         startNetworkUsageMonitoring();
