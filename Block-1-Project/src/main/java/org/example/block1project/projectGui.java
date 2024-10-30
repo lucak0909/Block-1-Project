@@ -96,7 +96,7 @@ public class projectGui extends Application {
         root.setCenter(tabPane);
 
         // Creates the stage
-        Scene scene = new Scene(root, 1200, 600);
+        Scene scene = new Scene(root, 1100, 600);
         scene.getStylesheets().add(getClass().getResource("/org/example/block1project/styles.css").toExternalForm()); // References CSS code
 
         primaryStage.setScene(scene);
