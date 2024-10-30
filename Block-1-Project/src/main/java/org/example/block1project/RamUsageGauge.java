@@ -35,7 +35,7 @@ public class RamUsageGauge {
         // Set up the arcs to form a semi-circle (half-gauge)
         usedRamArc = new Arc(0, 0, 150, 150, 180, 0);  // Center (0,0), radius 150
         usedRamArc.setType(ArcType.OPEN);  // Use OPEN instead of ROUND for a hollow look
-        usedRamArc.setStroke(Color.web("#BB86FC"));
+        usedRamArc.setStroke(Color.web("#ffa000"));
         usedRamArc.setStrokeWidth(30);  // Set the desired thickness of the arc
         usedRamArc.setFill(Color.TRANSPARENT);  // No fill to create the hollow center
 
@@ -49,13 +49,13 @@ public class RamUsageGauge {
         usedRamText = new Text("Used: 0 GB");
         freeRamText = new Text("Free: 0 GB");
 
-        // Set the text color to white
-        usedRamText.setFill(Color.WHITE);
-        freeRamText.setFill(Color.WHITE);
+        // Set the text color to black
+        usedRamText.setFill(Color.BLACK);
+        freeRamText.setFill(Color.BLACK);
 
         // Label for RAM usage percentage
         ramUsageLabel = new Label("RAM Usage %");
-        ramUsageLabel.setTextFill(Color.WHITE);
+        ramUsageLabel.setTextFill(Color.BLACK); // Set to black as well
 
         // Start a Timeline to update the Arcs and labels regularly
         Timeline timeline = new Timeline(
@@ -75,11 +75,18 @@ public class RamUsageGauge {
         Platform.runLater(() -> {
             usedRamArc.setLength(-usedPercentage);
             freeRamArc.setLength(180 - usedPercentage);
+
+            // Update the RAM usage text
             usedRamText.setText(String.format("Used: %.2f GB", usedMemory / (1024.0 * 1024 * 1024)));
             freeRamText.setText(String.format("Free: %.2f GB", freeMemory / (1024.0 * 1024 * 1024)));
-            // Adjust text position
-            usedRamText.setTranslateY(100); // Move used RAM text down
-            freeRamText.setTranslateY(120); // Move free RAM text down
+
+            // Center the text horizontally within the Pane
+            usedRamText.setX(290 - usedRamText.getLayoutBounds().getWidth() / 2);  // Adjust X to center
+            freeRamText.setX(290 - freeRamText.getLayoutBounds().getWidth() / 2);  // Adjust X to center
+
+            // Set Y position to avoid overlap
+            usedRamText.setY(180);  // Position for used RAM text
+            freeRamText.setY(210);  // Position for free RAM text
         });
     }
 

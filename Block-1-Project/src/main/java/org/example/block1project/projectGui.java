@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -17,10 +18,15 @@ public class projectGui extends Application {
     private RamUsageGauge ramUsage;
     private CpuClockGraph cpuClockGraph;
     private Home home;
-    //private Battery battery;
+
+
+    private Battery battery;
     private CpuTemperatureGraph cpuTemp;
     private FanSpeedGraph fan;
     private NetworkUsage network;
+    private CpuFrequencyChart cpuFrequencyChart;
+
+    private DiskReadWriteGraph diskReadWriteGraph;
 
     @Override
     public void start(Stage primaryStage) {
@@ -29,22 +35,29 @@ public class projectGui extends Application {
         ramUsage = new RamUsageGauge();
         cpuClockGraph = new CpuClockGraph();
         home = new Home();  // Home page system information
-       // battery = new Battery();  // Initialize battery status#
+        battery = new Battery();  // Initialize battery status#
         cpuTemp = new CpuTemperatureGraph();
         fan = new FanSpeedGraph();
         network = new NetworkUsage();
+        cpuFrequencyChart = new CpuFrequencyChart();
 
         // Create a VBox to hold battery information
         VBox batteryVBox = new VBox(10); // 10 pixels of spacing between elements
         batteryVBox.setStyle("-fx-padding: 20; -fx-alignment: center;");
 
         // Retrieve and display battery information in batteryVBox
-        //Battery.getBatteryInfo(batteryVBox);  // Pass the VBox as an argument
+        Battery.getBatteryInfo(batteryVBox);  // Pass the VBox as an argument
 
-        // Create a VBox for the CPU Tab layout
-        VBox cpuPage = new VBox();  // Change to VBox
-        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClockGraph.getClockChart(), CpuTemperatureGraph.getLineChart(), fan.getLineChart());
+        GridPane cpuPage = new GridPane();
+        cpuPage.setHgap(20); // Set horizontal gap between columns
+        cpuPage.setVgap(20); // Set vertical gap between rows
+        cpuPage.setStyle("-fx-padding: 20;"); // Add padding around the grid
 
+        // Add CPU charts to the GridPane in a 2-column layout
+        cpuPage.add(cpuLineGraph.getLineChart(), 0, 0);         // Row 0, Column 0
+        cpuPage.add(cpuClockGraph.getClockChart(), 1, 0);       // Row 0, Column 1
+        cpuPage.add(CpuTemperatureGraph.getLineChart(), 0, 1);  // Row 1, Column 0
+        cpuPage.add(cpuFrequencyChart.getFrequencyChart(), 1, 1); // Row 1, Column 1
         // Create a TabPane as the main layout
         TabPane tabPane = new TabPane();
 
