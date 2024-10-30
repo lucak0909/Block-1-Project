@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import java.io.File;
 import java.util.List;
 
 import oshi.SystemInfo;
@@ -12,6 +11,7 @@ import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GraphicsCard;
 import oshi.hardware.GlobalMemory;
+import oshi.hardware.HWDiskStore;
 import oshi.hardware.UsbDevice;
 import oshi.hardware.Baseboard;
 import oshi.software.os.OperatingSystem;
@@ -88,28 +88,43 @@ public class Home {
         Label motherboardInfoLabel = new Label(String.format("Motherboard: %s%n Model: %s%n Serial: %s%n Version: %s",
                 manufacturer, model, serialNumber, version));
 
+        // Disk Information
+        Label diskInfoLabel = new Label(getDiskInfo(hal));
+
         // Add labels to the VBox layout
-        homePageLayout.getChildren().addAll(osLabel, cpuLabel, ramLabel, storageLabel, graphicsLabel, usbInfoLabel, motherboardInfoLabel);
+        homePageLayout.getChildren().addAll(osLabel, cpuLabel, ramLabel, storageLabel, graphicsLabel, usbInfoLabel, motherboardInfoLabel, diskInfoLabel);
+    }
+
+    // Method to get disk information
+    private String getDiskInfo(HardwareAbstractionLayer hal) {
+        StringBuilder diskInfo = new StringBuilder("Disk Information:\n");
+        List<HWDiskStore> diskStores = hal.getDiskStores();
+
+        for (HWDiskStore disk : diskStores) {
+            disk.updateAttributes();  // Ensure we have the latest info
+            diskInfo.append(String.format("Name: %s\nModel: %s\nSerial: %s\nTotal Size:\t %.2f GiB\nFree Space:\t %.2f GiB\n",
+                    disk.getName(),
+                    disk.getModel(),
+                    disk.getSerial(),
+                    bytesToGiB(disk.getSize()),
+                    bytesToGiB(disk.getWriteBytes())));
+        }
+
+        return diskStores.isEmpty() ? "No disk information available" : diskInfo.toString();
     }
 
     // Method to get total disk space
     private long getTotalDiskSpace() {
-        File[] roots = File.listRoots();
-        long totalSpace = 0;
-        for (File root : roots) {
-            totalSpace += root.getTotalSpace();
-        }
-        return totalSpace;
+        return systemInfo.getOperatingSystem().getFileSystem().getFileStores().stream()
+                .mapToLong(store -> store.getTotalSpace())
+                .sum();
     }
 
     // Method to get free disk space
     private long getFreeDiskSpace() {
-        File[] roots = File.listRoots();
-        long freeSpace = 0;
-        for (File root : roots) {
-            freeSpace += root.getFreeSpace();
-        }
-        return freeSpace;
+        return systemInfo.getOperatingSystem().getFileSystem().getFileStores().stream()
+                .mapToLong(store -> store.getUsableSpace())
+                .sum();
     }
 
     // Method to get graphics information

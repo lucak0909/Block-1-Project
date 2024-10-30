@@ -21,6 +21,7 @@ public class projectGui extends Application {
     private CpuTemperatureGraph cpuTemp;
     private FanSpeedGraph fan;
     private NetworkUsage network;
+    private DiskReadWriteGraph diskReadWriteGraph;
 
     @Override
     public void start(Stage primaryStage) {
@@ -28,6 +29,7 @@ public class projectGui extends Application {
         cpuLineGraph = new CpuUsageGraph();
         ramUsage = new RamUsageGauge();
         cpuClockGraph = new CpuClockGraph();
+        diskReadWriteGraph = new DiskReadWriteGraph();        
         home = new Home();  // Home page system information
        // battery = new Battery();  // Initialize battery status#
         cpuTemp = new CpuTemperatureGraph();
@@ -63,6 +65,11 @@ public class projectGui extends Application {
         memoryTab.setContent(ramUsage.getRamUsagePane());
         memoryTab.setClosable(false);  // Prevent closing the Memory tab
 
+        // Create a Disk Tab with separate read and write speed graphs
+        Tab diskTab = new Tab("Disk");
+        diskTab.setContent(diskReadWriteGraph.getDiskReadWriteCharts());
+        diskTab.setClosable(false);
+
         // Create a Battery Tab and set batteryVBox as its content
         Tab batteryTab = new Tab("Battery");
         batteryTab.setContent(batteryVBox);  // Display battery information in the tab
@@ -73,7 +80,7 @@ public class projectGui extends Application {
         networkTab.setClosable(false);
 
         // Add all tabs to the TabPane
-        tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab, batteryTab, networkTab);
+        tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab, diskTab, batteryTab, networkTab);
 
         // Create the main layout and set the TabPane as the center
         BorderPane root = new BorderPane();
