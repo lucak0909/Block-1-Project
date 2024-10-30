@@ -6,8 +6,6 @@ import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
@@ -16,6 +14,7 @@ import oshi.hardware.GraphicsCard;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.UsbDevice;
 import oshi.hardware.Baseboard;
+import oshi.software.os.OperatingSystem;
 
 public class Home {
 
@@ -44,6 +43,7 @@ public class Home {
         String model = baseboard.getModel();
         String serialNumber = baseboard.getSerialNumber();
         String version = baseboard.getVersion();
+
         // OS Information
         String osInfo = String.format("\nOS: %s %s (%s), Uptime: %s",
                 os.getFamily(),
@@ -89,7 +89,7 @@ public class Home {
                 manufacturer, model, serialNumber, version));
 
         // Add labels to the VBox layout
-        homePageLayout.getChildren().addAll(cpuLabel, ramLabel, storageLabel, graphicsLabel, usbInfoLabel, motherboardInfoLabel);
+        homePageLayout.getChildren().addAll(osLabel, cpuLabel, ramLabel, storageLabel, graphicsLabel, usbInfoLabel, motherboardInfoLabel);
     }
 
     // Method to get total disk space
@@ -148,6 +148,17 @@ public class Home {
     // Helper method to convert bytes to GiB for better readability
     private double bytesToGiB(long bytes) {
         return bytes / (1024.0 * 1024 * 1024);
+    }
+
+    // Method to format uptime from milliseconds to HH:MM:SS
+    private String formatUptime(long uptimeMillis) {
+        long seconds = uptimeMillis / 1000;
+        long hours = seconds / 3600;
+        seconds %= 3600;
+        long minutes = seconds / 60;
+        seconds %= 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     // Method to return the VBox layout with the system info

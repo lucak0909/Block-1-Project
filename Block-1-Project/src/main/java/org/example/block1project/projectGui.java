@@ -17,7 +17,7 @@ public class projectGui extends Application {
     private RamUsageGauge ramUsage;
     private CpuClockGraph cpuClockGraph;
     private Home home;
-    private Battery battery;
+    //private Battery battery;
     private CpuTemperatureGraph cpuTemp;
     private FanSpeedGraph fan;
 
@@ -29,7 +29,7 @@ public class projectGui extends Application {
         ramUsage = new RamUsageGauge();
         cpuClockGraph = new CpuClockGraph();
         home = new Home();  // Home page system information
-        battery = new Battery();  // Initialize battery status#
+       // battery = new Battery();  // Initialize battery status#
         cpuTemp = new CpuTemperatureGraph();
 
         // Create a VBox to hold battery information
@@ -37,7 +37,7 @@ public class projectGui extends Application {
         batteryVBox.setStyle("-fx-padding: 20; -fx-alignment: center;");
 
         // Retrieve and display battery information in batteryVBox
-        Battery.getBatteryInfo(batteryVBox);  // Pass the VBox as an argument
+        //Battery.getBatteryInfo(batteryVBox);  // Pass the VBox as an argument
 
         // Create a VBox for the CPU Tab layout
         VBox cpuPage = new VBox();  // Change to VBox
