@@ -20,6 +20,7 @@ public class projectGui extends Application {
     private Battery battery;
     private CpuTemperatureGraph cpuTemp;
     private FanSpeedGraph fan;
+    private NetworkUsage network;
 
     @Override
     public void start(Stage primaryStage) {
@@ -31,6 +32,7 @@ public class projectGui extends Application {
         battery = new Battery();  // Initialize battery status#
         cpuTemp = new CpuTemperatureGraph();
         fan = new FanSpeedGraph();
+        network = new NetworkUsage();
 
         // Create a VBox to hold battery information
         VBox batteryVBox = new VBox(10); // 10 pixels of spacing between elements
@@ -66,8 +68,12 @@ public class projectGui extends Application {
         batteryTab.setContent(batteryVBox);  // Display battery information in the tab
         batteryTab.setClosable(false);
 
+        Tab networkTab = new Tab("Network");
+        networkTab.setContent(network.getNetworkUsageInfo());
+        networkTab.setClosable(false);
+
         // Add all tabs to the TabPane
-        tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab, batteryTab);
+        tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab, batteryTab, networkTab);
 
         // Create the main layout and set the TabPane as the center
         BorderPane root = new BorderPane();

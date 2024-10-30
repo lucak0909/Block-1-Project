@@ -31,6 +31,11 @@ public class Battery {
             Label powerUsage = new Label("Power Usage (W): " + Math.abs(battery.getPowerUsageRate() / 1000));
             Label isCharging = new Label("Is Charging: " + battery.isCharging());
             Label voltage = new Label("Voltage (V): " + battery.getVoltage());
+            name.setStyle("-fx-font-size: 25px;");
+            remainingCapacity.setStyle("-fx-font-size: 25px;");
+            powerUsage.setStyle("-fx-font-size: 25px;");
+            isCharging.setStyle("-fx-font-size: 25px;");
+            voltage.setStyle("-fx-font-size: 25px;");
 
             // Add labels to VBox
             vbox.getChildren().addAll(name, remainingCapacity, powerUsage, isCharging, voltage);

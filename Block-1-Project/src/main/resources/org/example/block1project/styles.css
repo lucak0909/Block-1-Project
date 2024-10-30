@@ -38,6 +38,10 @@
     -fx-text-fill: #ffffff;
 }
 
+.ScrollPane {
+    -fx-background-radius: 15
+}
+
 /* Button Styling */
 .button {
     -fx-background-color: #ffa000; /* Dark green button background */
@@ -58,7 +62,7 @@
 
 /* Label Styling */
 .label {
-    -fx-text-fill: #ffffff; /* White text for labels */
+    -fx-text-fill: #000000; /* White text for labels */
     -fx-font-size: 16px; /* Larger text for readability */
 }
 
