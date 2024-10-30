@@ -14,12 +14,12 @@ import oshi.hardware.GlobalMemory;
 import oshi.hardware.UsbDevice;
 import oshi.hardware.Baseboard;
 
-public class HomePageInfo {
+public class Home {
 
     private VBox homePageLayout;
     private SystemInfo systemInfo;
 
-    public HomePageInfo() {
+    public Home() {
         homePageLayout = new VBox(20);  // 20px spacing between elements
         systemInfo = new SystemInfo();  // Initialize OSHI SystemInfo
 

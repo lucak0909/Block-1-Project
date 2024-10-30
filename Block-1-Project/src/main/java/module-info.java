@@ -11,8 +11,7 @@ module org.example.block1project {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires jdk.management;
-
-    requires oshi.demo;
+    requires com.github.oshi;
 
     opens org.example.block1project to javafx.fxml;
     exports org.example.block1project;
