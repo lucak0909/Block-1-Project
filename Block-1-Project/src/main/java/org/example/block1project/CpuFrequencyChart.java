@@ -45,6 +45,7 @@ public class CpuFrequencyChart {
         // Add the series to the LineChart
         frequencyChart.getData().add(frequencySeries);
         frequencyChart.setCreateSymbols(false);  // Disable symbols on data points (just the line)
+        frequencyChart.setId("cpuClockChart");
 
         // Start a Timeline to update the frequency regularly (every 0.1 seconds for smooth transitions)
         Timeline timeline = new Timeline(

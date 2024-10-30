@@ -15,7 +15,7 @@ public class projectGui extends Application {
     private RamUsageGauge ramUsage;
     private CpuClockGraph cpuClockGraph;
     private Home home;
-    private Battery battery;
+    //private Battery battery;
     private CpuTemperatureGraph cpuTemp;
 
     private CpuFrequencyChart cpuFrequencyChart;
@@ -26,7 +26,8 @@ public class projectGui extends Application {
         ramUsage = new RamUsageGauge();
         cpuClockGraph = new CpuClockGraph();
         home = new Home();  // Home page system information
-        battery = new Battery();  // Initialize battery status
+        cpuTemp = new CpuTemperatureGraph();
+       // battery = new Battery();  // Initialize battery status
 
         // Create a VBox to hold battery information
         VBox batteryVBox = new VBox(10); // 10 pixels of spacing between elements
@@ -35,7 +36,7 @@ public class projectGui extends Application {
         cpuFrequencyChart = new CpuFrequencyChart();
         // Create a VBox for the CPU Tab layout
         VBox cpuPage = new VBox();  // Change to VBox
-        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClock.getClockChart(), cpuFrequencyChart.getFrequencyChart());
+        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClockGraph.getClockChart(), cpuFrequencyChart.getFrequencyChart(),cpuTemp.getLineChart());
         //cpuPage.getStylesheets().add(getClass().getResource("org/example/block1project/styles.css").toExternalForm());
 
         // Create a TabPane as the main layout

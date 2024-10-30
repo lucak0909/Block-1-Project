@@ -21,6 +21,7 @@ public class CpuClockGraph {
     private CentralProcessor processor;
     private LineChart<Number, Number> clockChart;
 
+
     public CpuClockGraph() {
         // Create the X and Y axes
         NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);  // Last 10 seconds (graph time)
@@ -48,7 +49,7 @@ public class CpuClockGraph {
         // Add the series to the LineChart
         clockChart.getData().add(clockSeries);
         clockChart.setCreateSymbols(false);  // Disable symbols on data points (just the line)
-
+        clockChart.setId("cpuClockChart");
         // Start a Timeline to update the clock speed regularly (every 0.1 seconds for smooth transitions)
         Timeline timeline = new Timeline(
             new KeyFrame(Duration.millis(UPDATE_INTERVAL), event -> updateCpuClockSpeed())

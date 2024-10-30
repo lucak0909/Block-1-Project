@@ -1,124 +1,185 @@
 /* General Styles */
 .root {
-    -fx-background-color: #121212; /* Dark background for modern aesthetics */
-    -fx-font-family: 'Inter', 'Roboto', sans-serif; /* Clean, modern sans-serif fonts */
+    -fx-background-color: #121212;
+    -fx-font-family: 'Inter', 'Roboto', sans-serif;
     -fx-padding: 24px;
 }
 
 /* TabPane Styling */
 .tab-pane .tab-header-background {
-    -fx-background-color: #1E1E1E; /* Subtle contrast for the tab header */
+    -fx-background-color: #1E1E1E;
 }
 
 .tab-pane .tab {
     -fx-background-color: transparent;
-    -fx-text-fill: #BDBDBD; /* Light gray for inactive tabs */
+    -fx-text-fill: #BDBDBD;
     -fx-font-size: 14px;
     -fx-padding: 12px 24px;
-    -fx-background-radius: 10px 10px 0 0; /* Rounded top corners */
-    -fx-transition: background-color 0.2s ease; /* Smooth transition */
+    -fx-background-radius: 10px 10px 0 0;
+    -fx-transition: background-color 0.2s ease;
 }
 
 .tab-pane .tab:selected {
-    -fx-background-color: #BB86FC; /* Soft purple for selected tab */
+    -fx-background-color: #BB86FC;
     -fx-text-fill: #FFFFFF;
 }
 
 .tab:hover {
-    -fx-background-color: rgba(187, 134, 252, 0.15); /* Subtle hover effect */
+    -fx-background-color: rgba(187, 134, 252, 0.15);
 }
 
 /* Button Styling */
 .button {
-    -fx-background-color: #BB86FC; /* Soft purple button background */
+    -fx-background-color: #BB86FC;
     -fx-text-fill: #FFFFFF;
-    -fx-background-radius: 30px; /* Pill-shaped buttons for a modern look */
+    -fx-background-radius: 30px;
     -fx-font-size: 14px;
     -fx-padding: 12px 24px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 4, 0, 0, 1);
-    -fx-border-width: 0;
-    -fx-cursor: hand;
-    -fx-transition: background-color 0.3s ease, translate 0.2s ease; /* Smooth transitions */
+    -fx-transition: background-color 0.3s ease, translate 0.2s ease;
 }
 
 .button:hover {
-    -fx-background-color: #9B59B6; /* Darker purple on hover */
+    -fx-background-color: #9B59B6;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0, 0, 2);
-    -fx-translate-y: -2px; /* Lift effect on hover */
+    -fx-translate-y: -2px;
 }
 
 /* Label Styling */
 .label {
-    -fx-text-fill: #E0E0E0; /* Light gray text for readability */
+    -fx-text-fill: #E0E0E0;
     -fx-font-size: 16px;
 }
 
 /* Chart Styling */
 .chart {
-    -fx-background-color: #121212; /* Make chart background transparent */
+    -fx-background-color: #121212; /* Set the chart area background */
 }
 
 .line-chart {
-    -fx-background-color: #1E1E1E; /* Dark background for the chart */
+    -fx-background-color: #1E1E1E; /* Background for the chart container */
     -fx-background-radius: 16px;
 }
 
 .line-chart .chart-plot-background {
-    -fx-background-color: transparent; /* Transparent plot area */
+    -fx-background-color: transparent; /* Transparent plot background to blend with the container */
 }
 
-.line-chart .series0 {
-    -fx-stroke: #BB86FC; /* Line color for the first series */
-    -fx-stroke-width: 2; /* Line width */
+.line-chart .chart-plot-background .chart-series-line {
+    -fx-stroke: #BB86FC; /* Set the color for the data line */
+    -fx-stroke-width: 2; /* Adjust the width of the data line */
 }
 
-.line-chart .chart-plot-background {
-    -fx-background-color: transparent;
+.line-chart .default-color0.chart-series-line {
+    -fx-stroke: #BB86FC; /* Set the first series line color */
+}
+
+.line-chart .chart-legend-item-symbol.default-color0 {
+    -fx-background-color: #BB86FC; /* Legend color matching the line */
+}
+
+.line-chart .default-color0.chart-symbol {
+    -fx-background-color: #BB86FC, white; /* Data points in the series */
+    -fx-background-radius: 3px;
+    -fx-padding: 5px;
+}
+
+/* For additional series lines, increment the .default-colorX */
+.line-chart .default-color1.chart-series-line {
+    -fx-stroke: #03DAC5; /* Example for a second line series color */
+}
+
+.line-chart .chart-legend-item-symbol.default-color1 {
+    -fx-background-color: #03DAC5;
+}
+
+.line-chart .default-color1.chart-symbol {
+    -fx-background-color: #03DAC5, white;
+}
+
+/* X and Y Axis Styling */
+.axis {
+    -fx-tick-label-fill: #E0E0E0; /* Tick label color */
+    -fx-font-size: 12px; /* Font size for labels */
+}
+
+.axis .axis-line {
+    -fx-stroke: #424242; /* Axis line color */
+}
+
+.axis .tick-mark {
+    -fx-stroke: #424242; /* Tick mark color */
 }
 
 
 .arc {
-    -fx-fill: #BB86FC; /* Soft purple for arcs in charts */
+    -fx-fill: #BB86FC;
 }
 
-/* Styling for System Information on Home Page */
+/* Home Page System Information Panel */
 #home-page-info {
-    -fx-background-color: #1E1E1E; /* Consistent dark background */
+    -fx-background-color: #1E1E1E;
     -fx-padding: 24px;
     -fx-background-radius: 16px;
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.1), 12, 0, 0, 6);
 }
 
 #home-page-info .label {
-    -fx-text-fill: #E0E0E0; /* Light gray text for information display */
+    -fx-text-fill: #E0E0E0;
     -fx-font-size: 18px;
+    -fx-line-spacing: 4px;
 }
 
-/* Additional Modern Touches */
-.scroll-pane {
-    -fx-background-color: transparent; /* Transparent scroll pane background */
-}
-
-.scroll-bar:vertical,
-.scroll-bar:horizontal {
-    -fx-background-color: transparent; /* Transparent scroll bar background */
-}
-
-.scroll-bar .thumb {
-    -fx-background-color: #424242; /* Darker thumb color for visibility */
-}
-
-/* Tooltip Styling for Enhanced UX */
+/* Tooltip Styling */
 .tooltip {
-    -fx-background-color: #333333; /* Dark tooltip background */
-    -fx-text-fill: #FFFFFF; /* White text for tooltips */
+    -fx-background-color: #333333;
+    -fx-text-fill: #FFFFFF;
     -fx-padding: 8px;
 }
 
-/* Enhanced Focus Ring for Accessibility */
+/* Scroll Pane */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #424242;
+}
+
+/* Focus Ring for Accessibility */
 .button:hover,
 .button:selected,
 .tab:hover,
 .tab:selected {
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.2), 3, 0, 1, 1);
+}
+/* Apply dark theme background and line color to the CPU clock chart */
+#cpuClockChart {
+    -fx-background-color: transparent; /* Transparent background */
+    -fx-border-color: transparent; /* Transparent border */
+}
+
+#cpuClockChart .chart-plot-background {
+    -fx-background-color: #1E1E1E; /* Dark background */
+}
+
+#cpuClockChart .chart-title {
+    -fx-text-fill: #FFFFFF; /* White title text */
+}
+
+#cpuClockChart .chart-legend {
+    -fx-text-fill: #FFFFFF; /* White legend text */
+}
+
+#cpuClockChart .axis-label {
+    -fx-text-fill: #BBBBBB; /* Light gray axis labels */
+}
+
+#cpuClockChart .axis {
+    -fx-tick-label-fill: #BBBBBB; /* Light gray tick labels */
+}
+
+#cpuClockChart .series0.default-color0.chart-series-line {
+    -fx-stroke: #BB86FC; /* Purple line color for the series */
+    -fx-stroke-width: 2px;
 }
