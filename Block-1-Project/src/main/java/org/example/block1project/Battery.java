@@ -24,14 +24,18 @@ public class Battery {
             return;
         }
 
+
         // Display battery information for each power source
         for (PowerSource battery : powerSources) {
+            double current = battery.getCurrentCapacity();
+            double max = battery.getMaxCapacity();
+            double currentPercentage = (current / max) * 100;
             Label name = new Label("Battery: " + battery.getName());
-            Label remainingCapacity = new Label("Remaining Capacity: " + battery.getRemainingCapacityPercent() + "%");
+            Label remainingCapacity = new Label("Remaining Capacity: " + Math.round(currentPercentage) + "%");
             Label powerUsage = new Label("Power Usage (W): " + Math.abs(battery.getPowerUsageRate() / 1000));
             Label isCharging = new Label("Is Charging: " + battery.isCharging());
             Label voltage = new Label("Voltage (V): " + battery.getVoltage());
-            name.setStyle("-fx-font-size: 25px;");
+            name.setStyle("-fx-font-size: 25px; ");
             remainingCapacity.setStyle("-fx-font-size: 25px;");
             powerUsage.setStyle("-fx-font-size: 25px;");
             isCharging.setStyle("-fx-font-size: 25px;");
