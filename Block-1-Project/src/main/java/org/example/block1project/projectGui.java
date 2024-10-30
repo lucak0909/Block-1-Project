@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;  // Import VBox instead of StackPane
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class projectGui extends Application {
@@ -15,6 +15,7 @@ public class projectGui extends Application {
     private RamUsageGauge ramUsage;
     private CpuClockGraph cpuClockGraph;
     private Home home;
+    private Battery battery;
 
     @Override
     public void start(Stage primaryStage) {
@@ -23,6 +24,14 @@ public class projectGui extends Application {
         ramUsage = new RamUsageGauge();
         cpuClockGraph = new CpuClockGraph();
         home = new Home();  // Home page system information
+        battery = new Battery();  // Initialize battery status
+
+        // Create a VBox to hold battery information
+        VBox batteryVBox = new VBox(10); // 10 pixels of spacing between elements
+        batteryVBox.setStyle("-fx-padding: 20; -fx-alignment: center;");
+
+        // Retrieve and display battery information in batteryVBox
+        Battery.getBatteryInfo(batteryVBox);  // Pass the VBox as an argument
 
         // Create a VBox for the CPU Tab layout
         VBox cpuPage = new VBox();  // Change to VBox
@@ -46,8 +55,13 @@ public class projectGui extends Application {
         memoryTab.setContent(ramUsage.getRamUsagePane());
         memoryTab.setClosable(false);  // Prevent closing the Memory tab
 
-        // Add tabs to the TabPane
-        tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab);
+        // Create a Battery Tab and set batteryVBox as its content
+        Tab batteryTab = new Tab("Battery");
+        batteryTab.setContent(batteryVBox);  // Display battery information in the tab
+        batteryTab.setClosable(false);
+
+        // Add all tabs to the TabPane
+        tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab, batteryTab);
 
         // Create the main layout and set the TabPane as the center
         BorderPane root = new BorderPane();
