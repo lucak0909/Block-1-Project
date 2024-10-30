@@ -5,11 +5,16 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.io.File;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GraphicsCard;
 import oshi.hardware.GlobalMemory;
+import oshi.software.os.OperatingSystem;
 
 public class Home {
 
@@ -30,14 +35,22 @@ public class Home {
         HardwareAbstractionLayer hal = systemInfo.getHardware();
         CentralProcessor cpu = hal.getProcessor();
         GlobalMemory memory = hal.getMemory();
+        OperatingSystem os = systemInfo.getOperatingSystem();
+
+        // OS Information
+        String osInfo = String.format("OS: %s %s (%s), Uptime: %s",
+                os.getFamily(),
+                os.getVersionInfo().getVersion(),
+                os.getManufacturer(),
+                formatUptime(os.getSystemUptime()));
+        Label osLabel = new Label(osInfo);
 
         // CPU Information
         String cpuBrand = cpu.getProcessorIdentifier().getName();
         int cpuCores = cpu.getLogicalProcessorCount();
         double cpuLoad = cpu.getSystemCpuLoad(1000) * 100; // CPU load in percentage
 
-        // Create labels for displaying the system information
-        Label cpuLabel = new Label(String.format("\nCPU: %s, %d cores, %.2f%% load",
+        Label cpuLabel = new Label(String.format("CPU: %s, %d cores, %.2f%% load",
                 cpuBrand, cpuCores, cpuLoad));
 
         // Memory Information
@@ -48,9 +61,6 @@ public class Home {
         Label ramLabel = new Label(String.format("Memory: %.2f GiB used / %.2f GiB total",
                 bytesToGiB(usedMemory), bytesToGiB(totalMemory)));
 
-        // Add labels to the VBox layout
-        homePageLayout.getChildren().addAll(cpuLabel, ramLabel);
-
         // Storage Information
         long totalStorage = getTotalDiskSpace();
         long freeStorage = getFreeDiskSpace();
@@ -59,12 +69,12 @@ public class Home {
         Label storageLabel = new Label(String.format("Storage: %.2f GiB used / %.2f GiB total",
                 bytesToGiB(usedStorage), bytesToGiB(totalStorage)));
 
-        // Gather graphics information
+        // Graphics Information
         String graphicsInfo = getGraphicsInfo(hal);
         Label graphicsLabel = new Label("Graphics: " + graphicsInfo);
 
-        // Add storage and graphics information to the layout
-        homePageLayout.getChildren().addAll(storageLabel, graphicsLabel);
+        // Add all labels to the VBox layout
+        homePageLayout.getChildren().addAll(osLabel, cpuLabel, ramLabel, storageLabel, graphicsLabel);
     }
 
     // Method to get total disk space
@@ -91,10 +101,17 @@ public class Home {
     private String getGraphicsInfo(HardwareAbstractionLayer hal) {
         StringBuilder graphicsInfo = new StringBuilder();
         for (GraphicsCard gpu : hal.getGraphicsCards()) {
-            graphicsInfo.append(String.format("%s, VRam: %d GiB\n", gpu.getName(), (gpu.getVRam() / (1024 * 1024 * 1024))));
-            // You can add more details here if needed
+            graphicsInfo.append(String.format("%s, VRam: %.2f GiB\n", gpu.getName(), bytesToGiB(gpu.getVRam())));
         }
         return graphicsInfo.toString();
+    }
+
+    // Helper method to format system uptime in hours, minutes, seconds
+    private String formatUptime(long seconds) {
+        long hours = seconds / 3600;
+        long minutes = (seconds % 3600) / 60;
+        long secs = seconds % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, secs);
     }
 
     // Helper method to convert bytes to GiB for better readability
