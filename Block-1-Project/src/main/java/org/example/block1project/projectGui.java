@@ -16,9 +16,9 @@ public class projectGui extends Application {
     // Instances of the animated components
     private CpuUsageGraph cpuLineGraph;
     private RamUsageGauge ramUsage;
+    private CpuUsageGauge cpuUsageGauge; // Add instance of CpuUsageGauge
     private CpuClockGraph cpuClockGraph;
     private Home home;
-
 
     private Battery battery;
     private CpuTemperatureGraph cpuTemp;
@@ -33,11 +33,12 @@ public class projectGui extends Application {
         // Initialize animated components and home page info
         cpuLineGraph = new CpuUsageGraph();
         ramUsage = new RamUsageGauge();
+        cpuUsageGauge = new CpuUsageGauge(); // Initialize CpuUsageGauge
         cpuClockGraph = new CpuClockGraph();
         home = new Home();  // Home page system information
-        battery = new Battery();  // Initialize battery status#
+        battery = new Battery();  // Initialize battery status
         cpuTemp = new CpuTemperatureGraph();
-        fan = new FanSpeedGraph();
+        //fan = new FanSpeedGraph();
         network = new NetworkUsage();
         cpuFrequencyChart = new CpuFrequencyChart();
         diskReadWriteGraph = new DiskReadWriteGraph();
@@ -59,6 +60,17 @@ public class projectGui extends Application {
         cpuPage.add(cpuClockGraph.getClockChart(), 1, 0);       // Row 0, Column 1
         cpuPage.add(CpuTemperatureGraph.getLineChart(), 0, 1);  // Row 1, Column 0
         cpuPage.add(cpuFrequencyChart.getFrequencyChart(), 1, 1); // Row 1, Column 1
+
+        // Create a GridPane for the Memory tab
+        GridPane memoryGrid = new GridPane();
+        memoryGrid.setHgap(20);
+        memoryGrid.setVgap(20);
+        memoryGrid.setStyle("-fx-padding: 20; -fx-alignment: center;"); // Add padding around the grid
+
+        // Add RAM and CPU usage gauges to the memory grid
+        memoryGrid.add(ramUsage.getRamUsagePane(), 0, 0); // RAM usage gauge
+        memoryGrid.add(cpuUsageGauge.getCpuUsagePane(), 1, 0); // CPU usage gauge
+
         // Create a TabPane as the main layout
         TabPane tabPane = new TabPane();
 
@@ -72,9 +84,9 @@ public class projectGui extends Application {
         cpuTab.setContent(cpuPage);  // Set the VBox as the content
         cpuTab.setClosable(false);  // Prevent closing the CPU tab
 
-        // Create a Memory Tab with real-time RAM usage
+        // Create a Memory Tab with RAM and CPU usage gauges
         Tab memoryTab = new Tab("Memory");
-        memoryTab.setContent(ramUsage.getRamUsagePane());
+        memoryTab.setContent(memoryGrid);  // Set the memory grid as the content
         memoryTab.setClosable(false);  // Prevent closing the Memory tab
 
         // Create a Battery Tab and set batteryVBox as its content
@@ -91,7 +103,7 @@ public class projectGui extends Application {
         diskTab.setClosable(false);
 
         // Add all tabs to the TabPane
-        tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab, batteryTab, networkTab,diskTab);
+        tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab, batteryTab, networkTab, diskTab);
 
         // Create the main layout and set the TabPane as the center
         BorderPane root = new BorderPane();

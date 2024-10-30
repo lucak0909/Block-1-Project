@@ -3,18 +3,11 @@ package org.example.block1project;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import oshi.SystemInfo;
+import oshi.hardware.*;
+import oshi.software.os.OperatingSystem;
 
 import java.util.List;
-
-import oshi.SystemInfo;
-import oshi.hardware.HardwareAbstractionLayer;
-import oshi.hardware.CentralProcessor;
-import oshi.hardware.GraphicsCard;
-import oshi.hardware.GlobalMemory;
-import oshi.hardware.HWDiskStore;
-import oshi.hardware.UsbDevice;
-import oshi.hardware.Baseboard;
-import oshi.software.os.OperatingSystem;
 
 public class Home {
 
@@ -60,6 +53,10 @@ public class Home {
         Label cpuLabel = new Label(String.format("CPU: %s, %d cores, %.2f%% load",
                 cpuBrand, cpuCores, cpuLoad));
 
+        // Cache Information
+        String cacheInfo = getCacheInfo(cpu);
+        Label cacheLabel = new Label("CPU Cache Types: " + cacheInfo);
+
         // Memory Information
         long totalMemory = memory.getTotal();
         long availableMemory = memory.getAvailable();
@@ -92,8 +89,31 @@ public class Home {
         Label diskInfoLabel = new Label(getDiskInfo(hal));
 
         // Add labels to the VBox layout
-        homePageLayout.getChildren().addAll(osLabel, cpuLabel, ramLabel, storageLabel, graphicsLabel, usbInfoLabel, motherboardInfoLabel, diskInfoLabel);
+        homePageLayout.getChildren().addAll(osLabel, cpuLabel, cacheLabel, ramLabel, storageLabel, graphicsLabel, usbInfoLabel, motherboardInfoLabel, diskInfoLabel);
     }
+
+    // Method to retrieve cache information for each cache level
+    private String getCacheInfo(CentralProcessor cpu) {
+        StringBuilder cacheInfo = new StringBuilder();
+        List<CentralProcessor.ProcessorCache> caches = cpu.getProcessorCaches();
+
+        for (CentralProcessor.ProcessorCache cache : caches) {
+            // Only display level and type if size appears to be invalid
+            if (cache.getCacheSize() < 1024) { // Assuming size below 1KB is invalid
+                cacheInfo.append(String.format("L%d %s Cache, ", cache.getLevel(), cache.getType()));
+            } else {
+                cacheInfo.append(String.format("L%d %s Cache: %d KB, ", cache.getLevel(), cache.getType(), cache.getCacheSize() / 1024));
+            }
+        }
+
+        if (cacheInfo.length() > 0) {
+            cacheInfo.setLength(cacheInfo.length() - 2); // Remove trailing comma and space
+        } else {
+            cacheInfo.append("No cache information available");
+        }
+        return cacheInfo.toString();
+    }
+
 
     // Method to get disk information
     private String getDiskInfo(HardwareAbstractionLayer hal) {
@@ -144,7 +164,6 @@ public class Home {
         for (int i = 0; i < usbDevices.size(); i++) {
             UsbDevice usbDevice = usbDevices.get(i);
             usbInfoBuilder.append(String.format("%s (Vendor ID: %s)", usbDevice.getName(), usbDevice.getVendorId()));
-            // Add a line break for every 3 devices for better readability
             if ((i + 1) % 3 == 0 && (i + 1) < usbDevices.size()) {
                 usbInfoBuilder.append("\n");
             } else {
@@ -155,8 +174,7 @@ public class Home {
         if (usbInfoBuilder.length() == 0) {
             return "No USB devices found";
         }
-        // Remove the trailing comma and space
-        usbInfoBuilder.setLength(usbInfoBuilder.length() - 2);
+        usbInfoBuilder.setLength(usbInfoBuilder.length() - 2); // Remove trailing comma and space
         return usbInfoBuilder.toString();
     }
 
