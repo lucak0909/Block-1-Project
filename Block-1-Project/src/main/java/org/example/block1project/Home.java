@@ -38,7 +38,7 @@ public class Home {
         OperatingSystem os = systemInfo.getOperatingSystem();
 
         // OS Information
-        String osInfo = String.format("OS: %s %s (%s), Uptime: %s",
+        String osInfo = String.format("\nOS: %s %s (%s), Uptime: %s",
                 os.getFamily(),
                 os.getVersionInfo().getVersion(),
                 os.getManufacturer(),

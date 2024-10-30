@@ -35,7 +35,7 @@ public class RamUsageGauge {
         // Set up the arcs to form a semi-circle (half-gauge)
         usedRamArc = new Arc(0, 0, 150, 150, 180, 0);  // Center (0,0), radius 150
         usedRamArc.setType(ArcType.OPEN);  // Use OPEN instead of ROUND for a hollow look
-        usedRamArc.setStroke(Color.RED);
+        usedRamArc.setStroke(Color.ORANGE);
         usedRamArc.setStrokeWidth(30);  // Set the desired thickness of the arc
         usedRamArc.setFill(Color.TRANSPARENT);  // No fill to create the hollow center
 
@@ -50,12 +50,12 @@ public class RamUsageGauge {
         freeRamText = new Text("Free: 0 GB");
 
         // Set the text color to white
-        usedRamText.setFill(Color.WHITE);
-        freeRamText.setFill(Color.WHITE);
+        usedRamText.setFill(Color.BLACK);
+        freeRamText.setFill(Color.BLACK);
 
         // Label for RAM usage percentage
         ramUsageLabel = new Label("RAM Usage %");
-        ramUsageLabel.setTextFill(Color.WHITE);
+        ramUsageLabel.setTextFill(Color.BLACK);
 
         // Start a Timeline to update the Arcs and labels regularly
         Timeline timeline = new Timeline(

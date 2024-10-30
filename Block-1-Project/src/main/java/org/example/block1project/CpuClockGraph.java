@@ -6,6 +6,8 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.util.Duration;
+import oshi.SystemInfo;
+import oshi.hardware.CentralProcessor;
 
 public class CpuClockGraph {
 
@@ -16,15 +18,22 @@ public class CpuClockGraph {
     private static final double TIME_SCALE = 0.7;     // Faster time scale (70% of real-time speed)
 
     private LineChart<Number, Number> clockChart;
+    private CentralProcessor processor;  // CentralProcessor object to get CPU information
+    private long[] previousTicks;  // Array to store previous CPU ticks
 
     public CpuClockGraph() {
+        // Initialize OSHI and get the CentralProcessor instance
+        SystemInfo systemInfo = new SystemInfo();
+        processor = systemInfo.getHardware().getProcessor();
+        previousTicks = processor.getSystemCpuLoadTicks();  // Get initial ticks
+
         // Create the X and Y axes
         NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);  // Last 10 seconds (graph time)
         NumberAxis yAxis = new NumberAxis(0, 100, 10);  // Y-axis range between 0 and 100 (percentage)
 
         // Create a LineChart to display CPU clock speed over time
         clockChart = new LineChart<>(xAxis, yAxis);
-        clockChart.setTitle("CPU Clock Usage Over Time");
+        clockChart.setTitle("CPU Clock Speed");
 
         // Remove grid lines for a cleaner look
         clockChart.setHorizontalGridLinesVisible(false);
@@ -41,7 +50,7 @@ public class CpuClockGraph {
 
         // Start a Timeline to update the clock speed regularly (every 0.1 seconds for smooth transitions)
         Timeline timeline = new Timeline(
-            new KeyFrame(Duration.millis(UPDATE_INTERVAL), event -> updateCpuClockSpeed())
+                new KeyFrame(Duration.millis(UPDATE_INTERVAL), event -> updateCpuClockSpeed())
         );
         timeline.setCycleCount(Timeline.INDEFINITE);  // Run indefinitely
         timeline.play();  // Start the animation
@@ -49,8 +58,12 @@ public class CpuClockGraph {
 
     // Method to update the CPU clock speed and add data to the graph
     private void updateCpuClockSpeed() {
-        // Simulating clock usage - replace this with real data if available
-        double clockSpeed = Math.random() * 100;  // Random CPU clock speed for demonstration (0 to 100%)
+        // Get the current CPU load using the previous ticks
+        long[] currentTicks = processor.getSystemCpuLoadTicks();  // Get current ticks
+        double clockSpeed = processor.getSystemCpuLoadBetweenTicks(previousTicks) * 100;  // Get CPU load in percentage
+
+        // Update previous ticks for the next calculation
+        previousTicks = currentTicks;
 
         // Add the clock speed to the series (with time on the X-axis, adjusted by TIME_SCALE)
         clockSeries.getData().add(new XYChart.Data<>((timeInMilliseconds * TIME_SCALE / 1000.0), clockSpeed));

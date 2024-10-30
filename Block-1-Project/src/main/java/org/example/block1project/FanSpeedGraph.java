@@ -24,7 +24,6 @@ public class FanSpeedGraph {
         NumberAxis xAxis = new NumberAxis(0, MAX_TIME_RANGE / 1000, 1);
         NumberAxis yAxis = new NumberAxis(0, 5000, 500); // Adjust max value according to fan specifications
         xAxis.setVisible(false);
-        yAxis.setLabel("Fan Speed (RPM)");
 
         // Create a LineChart to display fan speed over time
         lineChart = new LineChart<>(xAxis, yAxis);

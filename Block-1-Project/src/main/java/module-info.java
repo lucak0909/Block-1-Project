@@ -13,6 +13,7 @@ module org.example.block1project {
     requires jdk.management;
     //requires com.github.oshi;
     requires oshi.demo;
+    requires java.desktop;
 
     opens org.example.block1project to javafx.fxml;
     exports org.example.block1project;
