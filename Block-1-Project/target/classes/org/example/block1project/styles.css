@@ -1,185 +1,104 @@
 /* General Styles */
 .root {
-    -fx-background-color: #121212;
-    -fx-font-family: 'Inter', 'Roboto', sans-serif;
-    -fx-padding: 24px;
+    -fx-background-color: #ffffff; /* white background for dark mode */
+    -fx-font-family: 'Segoe UI', sans-serif; /* Modern sans-serif font */
+    -fx-padding: 20px;
+}
+
+.tab-header .tab {
+    -fx-text-fill: #ffffff; /* Set text color of tabs to white */
 }
 
 /* TabPane Styling */
 .tab-pane .tab-header-background {
-    -fx-background-color: #1E1E1E;
+    -fx-text-fill: #ffffff; /* Dark gray background for the tab bar */
+    -fx-background-radius: 15
 }
 
 .tab-pane .tab {
-    -fx-background-color: transparent;
-    -fx-text-fill: #BDBDBD;
-    -fx-font-size: 14px;
-    -fx-padding: 12px 24px;
-    -fx-background-radius: 10px 10px 0 0;
-    -fx-transition: background-color 0.2s ease;
+    -fx-background-color: transparent; /* Transparent tabs */
+    -fx-text-fill: #ffffff; /* White text for tabs */
 }
 
 .tab-pane .tab:selected {
-    -fx-background-color: #BB86FC;
-    -fx-text-fill: #FFFFFF;
+    -fx-background-color: #ffa000; /* Dark teal background for selected tab */
+    -fx-text-fill: #ffffff;
+}
+
+.tab {
+    -fx-background-radius: 15; /* Rounded corners for the tabs */
+    -fx-padding: 10px 20px;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
 }
 
 .tab:hover {
-    -fx-background-color: rgba(187, 134, 252, 0.15);
+    -fx-background-color: #ffa000; /* Slightly darker teal on hover */
+    -fx-text-fill: #ffffff;
+}
+
+.ScrollPane {
+    -fx-background-radius: 15
 }
 
 /* Button Styling */
 .button {
-    -fx-background-color: #BB86FC;
-    -fx-text-fill: #FFFFFF;
-    -fx-background-radius: 30px;
-    -fx-font-size: 14px;
-    -fx-padding: 12px 24px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 4, 0, 0, 1);
-    -fx-transition: background-color 0.3s ease, translate 0.2s ease;
+    -fx-background-color: #ffa000; /* Dark green button background */
+    -fx-text-fill: #ffffff; /* White text */
+    -fx-background-radius: 10; /* Rounded corners for buttons */
+    -fx-font-size: 20px;
+    /*-fx-font-weight: bold; */
+    -fx-padding: 10px 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 1);
+    -fx-border-width: 0;
+    -fx-cursor: hand;
 }
 
 .button:hover {
-    -fx-background-color: #9B59B6;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0, 0, 2);
-    -fx-translate-y: -2px;
+    -fx-background-color: #ffa000; /* Slightly lighter green on hover */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 8, 0, 0, 2);
 }
 
 /* Label Styling */
 .label {
-    -fx-text-fill: #E0E0E0;
-    -fx-font-size: 16px;
+    -fx-text-fill: #000000; /* White text for labels */
+    -fx-font-size: 16px; /* Larger text for readability */
 }
 
 /* Chart Styling */
 .chart {
-    -fx-background-color: #121212; /* Set the chart area background */
+    -fx-background-color: transparent; /* Transparent background for charts */
 }
 
-.line-chart {
-    -fx-background-color: #1E1E1E; /* Background for the chart container */
-    -fx-background-radius: 16px;
-}
-
-.line-chart .chart-plot-background {
-    -fx-background-color: transparent; /* Transparent plot background to blend with the container */
-}
-
-.line-chart .chart-plot-background .chart-series-line {
-    -fx-stroke: #BB86FC; /* Set the color for the data line */
-    -fx-stroke-width: 2; /* Adjust the width of the data line */
-}
-
-.line-chart .default-color0.chart-series-line {
-    -fx-stroke: #BB86FC; /* Set the first series line color */
-}
-
-.line-chart .chart-legend-item-symbol.default-color0 {
-    -fx-background-color: #BB86FC; /* Legend color matching the line */
-}
-
-.line-chart .default-color0.chart-symbol {
-    -fx-background-color: #BB86FC, white; /* Data points in the series */
-    -fx-background-radius: 3px;
-    -fx-padding: 5px;
-}
-
-/* For additional series lines, increment the .default-colorX */
-.line-chart .default-color1.chart-series-line {
-    -fx-stroke: #03DAC5; /* Example for a second line series color */
-}
-
-.line-chart .chart-legend-item-symbol.default-color1 {
-    -fx-background-color: #03DAC5;
-}
-
-.line-chart .default-color1.chart-symbol {
-    -fx-background-color: #03DAC5, white;
-}
-
-/* X and Y Axis Styling */
-.axis {
-    -fx-tick-label-fill: #E0E0E0; /* Tick label color */
-    -fx-font-size: 12px; /* Font size for labels */
-}
-
-.axis .axis-line {
-    -fx-stroke: #424242; /* Axis line color */
-}
-
-.axis .tick-mark {
-    -fx-stroke: #424242; /* Tick mark color */
-}
-
-
-.arc {
-    -fx-fill: #BB86FC;
-}
-
-/* Home Page System Information Panel */
-#home-page-info {
-    -fx-background-color: #1E1E1E;
-    -fx-padding: 24px;
-    -fx-background-radius: 16px;
-    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.1), 12, 0, 0, 6);
-}
-
-#home-page-info .label {
-    -fx-text-fill: #E0E0E0;
-    -fx-font-size: 18px;
-    -fx-line-spacing: 4px;
-}
-
-/* Tooltip Styling */
-.tooltip {
-    -fx-background-color: #333333;
-    -fx-text-fill: #FFFFFF;
-    -fx-padding: 8px;
-}
-
-/* Scroll Pane */
-.scroll-pane {
+.chart-legend-item {
     -fx-background-color: transparent;
 }
 
-.scroll-bar .thumb {
-    -fx-background-color: #424242;
+.line-chart, .pie-chart {
+    -fx-background-color: #1c1c1c; /* Dark gray background for charts */
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
 }
 
-/* Focus Ring for Accessibility */
-.button:hover,
-.button:selected,
-.tab:hover,
-.tab:selected {
-    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.2), 3, 0, 1, 1);
-}
-/* Apply dark theme background and line color to the CPU clock chart */
-#cpuClockChart {
-    -fx-background-color: transparent; /* Transparent background */
-    -fx-border-color: transparent; /* Transparent border */
+.line-chart .chart-plot-background {
+    -fx-background-color: transparent;
 }
 
-#cpuClockChart .chart-plot-background {
-    -fx-background-color: #1E1E1E; /* Dark background */
+.arc {
+    -fx-fill: #004d40; /* Deep teal color for Arc */
 }
 
-#cpuClockChart .chart-title {
-    -fx-text-fill: #FFFFFF; /* White title text */
+/* Styling for System Information on Home Page */
+#home-page-info {
+    -fx-background-color: #1c1c1c; /* Dark gray background for information pane */
+    -fx-padding: 20px;
+    -fx-border-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
 }
 
-#cpuClockChart .chart-legend {
-    -fx-text-fill: #FFFFFF; /* White legend text */
-}
-
-#cpuClockChart .axis-label {
-    -fx-text-fill: #BBBBBB; /* Light gray axis labels */
-}
-
-#cpuClockChart .axis {
-    -fx-tick-label-fill: #BBBBBB; /* Light gray tick labels */
-}
-
-#cpuClockChart .series0.default-color0.chart-series-line {
-    -fx-stroke: #BB86FC; /* Purple line color for the series */
-    -fx-stroke-width: 2px;
+#home-page-info .label {
+    -fx-text-fill: #000000; /* White text for system information */
+    -fx-font-size: 18px; /* Larger text for important information */
+    -fx-padding: 10px 0;
 }
