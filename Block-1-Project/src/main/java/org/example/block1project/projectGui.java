@@ -16,6 +16,7 @@ public class projectGui extends Application {
     private CpuClockGraph cpuClockGraph;
     private Home home;
     private Battery battery;
+    private CpuTemperatureGraph cpuTemp;
 
     @Override
     public void start(Stage primaryStage) {
@@ -24,7 +25,8 @@ public class projectGui extends Application {
         ramUsage = new RamUsageGauge();
         cpuClockGraph = new CpuClockGraph();
         home = new Home();  // Home page system information
-        battery = new Battery();  // Initialize battery status
+        battery = new Battery();  // Initialize battery status#
+        cpuTemp = new CpuTemperatureGraph();
 
         // Create a VBox to hold battery information
         VBox batteryVBox = new VBox(10); // 10 pixels of spacing between elements
@@ -35,7 +37,7 @@ public class projectGui extends Application {
 
         // Create a VBox for the CPU Tab layout
         VBox cpuPage = new VBox();  // Change to VBox
-        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClockGraph.getClockChart());
+        cpuPage.getChildren().addAll(cpuLineGraph.getLineChart(), cpuClockGraph.getClockChart(), CpuTemperatureGraph.getLineChart());
 
         // Create a TabPane as the main layout
         TabPane tabPane = new TabPane();
