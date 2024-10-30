@@ -14,7 +14,8 @@ import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.GraphicsCard;
 import oshi.hardware.GlobalMemory;
-import oshi.software.os.OperatingSystem;
+import oshi.hardware.UsbDevice;
+import oshi.hardware.Baseboard;
 
 public class Home {
 
@@ -22,7 +23,7 @@ public class Home {
     private SystemInfo systemInfo;
 
     public Home() {
-        homePageLayout = new VBox(10);  // 10px spacing between elements
+        homePageLayout = new VBox(20);  // 20px spacing between elements
         systemInfo = new SystemInfo();  // Initialize OSHI SystemInfo
 
         // Gather system information and update the home page
@@ -37,6 +38,12 @@ public class Home {
         GlobalMemory memory = hal.getMemory();
         OperatingSystem os = systemInfo.getOperatingSystem();
 
+        // Motherboard Info
+        Baseboard baseboard = hal.getComputerSystem().getBaseboard();
+        String manufacturer = baseboard.getManufacturer();
+        String model = baseboard.getModel();
+        String serialNumber = baseboard.getSerialNumber();
+        String version = baseboard.getVersion();
         // OS Information
         String osInfo = String.format("\nOS: %s %s (%s), Uptime: %s",
                 os.getFamily(),
@@ -73,8 +80,16 @@ public class Home {
         String graphicsInfo = getGraphicsInfo(hal);
         Label graphicsLabel = new Label("Graphics: " + graphicsInfo);
 
-        // Add all labels to the VBox layout
-        homePageLayout.getChildren().addAll(osLabel, cpuLabel, ramLabel, storageLabel, graphicsLabel);
+        // USB Information
+        String usbInfo = getUSBInfo(hal);
+        Label usbInfoLabel = new Label("USB Devices: " + usbInfo);
+
+        // Motherboard Info
+        Label motherboardInfoLabel = new Label(String.format("Motherboard: %s%n Model: %s%n Serial: %s%n Version: %s",
+                manufacturer, model, serialNumber, version));
+
+        // Add labels to the VBox layout
+        homePageLayout.getChildren().addAll(cpuLabel, ramLabel, storageLabel, graphicsLabel, usbInfoLabel, motherboardInfoLabel);
     }
 
     // Method to get total disk space
@@ -106,12 +121,28 @@ public class Home {
         return graphicsInfo.toString();
     }
 
-    // Helper method to format system uptime in hours, minutes, seconds
-    private String formatUptime(long seconds) {
-        long hours = seconds / 3600;
-        long minutes = (seconds % 3600) / 60;
-        long secs = seconds % 60;
-        return String.format("%02d:%02d:%02d", hours, minutes, secs);
+    // Method to get USB devices information
+    private String getUSBInfo(HardwareAbstractionLayer hal) {
+        StringBuilder usbInfoBuilder = new StringBuilder();
+        List<UsbDevice> usbDevices = hal.getUsbDevices(true);
+
+        for (int i = 0; i < usbDevices.size(); i++) {
+            UsbDevice usbDevice = usbDevices.get(i);
+            usbInfoBuilder.append(String.format("%s (Vendor ID: %s)", usbDevice.getName(), usbDevice.getVendorId()));
+            // Add a line break for every 3 devices for better readability
+            if ((i + 1) % 3 == 0 && (i + 1) < usbDevices.size()) {
+                usbInfoBuilder.append("\n");
+            } else {
+                usbInfoBuilder.append(", ");
+            }
+        }
+
+        if (usbInfoBuilder.length() == 0) {
+            return "No USB devices found";
+        }
+        // Remove the trailing comma and space
+        usbInfoBuilder.setLength(usbInfoBuilder.length() - 2);
+        return usbInfoBuilder.toString();
     }
 
     // Helper method to convert bytes to GiB for better readability

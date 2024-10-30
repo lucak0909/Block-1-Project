@@ -47,6 +47,7 @@ public class CpuTemperatureGraph {
         lineChart.getData().add(temperatureSeries);
         lineChart.setCreateSymbols(false);
         lineChart.setStyle("-fx-background-color: transparent;");
+        lineChart.setId("cpuClockChart");
 
         // Start a Timeline to update the CPU temperature regularly
         Timeline timeline = new Timeline(

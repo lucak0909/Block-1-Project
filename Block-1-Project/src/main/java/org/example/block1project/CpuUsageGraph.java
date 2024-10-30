@@ -40,6 +40,7 @@ public class CpuUsageGraph {
         lineChart.getData().add(cpuSeries);
         lineChart.setCreateSymbols(false);
         lineChart.setStyle("-fx-background-color: transparent;");
+        lineChart.setId("cpuClockChart");
 
         // Start a Timeline to update the CPU usage regularly
         Timeline timeline = new Timeline(
