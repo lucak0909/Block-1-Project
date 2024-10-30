@@ -40,6 +40,7 @@ public class projectGui extends Application {
         fan = new FanSpeedGraph();
         network = new NetworkUsage();
         cpuFrequencyChart = new CpuFrequencyChart();
+        diskReadWriteGraph = new DiskReadWriteGraph();
 
         // Create a VBox to hold battery information
         VBox batteryVBox = new VBox(10); // 10 pixels of spacing between elements
@@ -85,8 +86,12 @@ public class projectGui extends Application {
         networkTab.setContent(network.getNetworkUsageInfo());
         networkTab.setClosable(false);
 
+        Tab diskTab = new Tab("Disk");
+        diskTab.setContent(diskReadWriteGraph.getDiskReadWriteCharts());
+        diskTab.setClosable(false);
+
         // Add all tabs to the TabPane
-        tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab, batteryTab, networkTab);
+        tabPane.getTabs().addAll(homeTab, cpuTab, memoryTab, batteryTab, networkTab,diskTab);
 
         // Create the main layout and set the TabPane as the center
         BorderPane root = new BorderPane();
