@@ -165,14 +165,11 @@ public class Home {
         return bytes / (1024.0 * 1024 * 1024);
     }
 
-    // Method to format uptime from milliseconds to HH:MM:SS
-    private String formatUptime(long uptimeMillis) {
-        long seconds = uptimeMillis / 1000;
-        long hours = seconds / 3600;
-        seconds %= 3600;
-        long minutes = seconds / 60;
-        seconds %= 60;
-
+    // Method to format uptime in a human-readable way
+    public String formatUptime(long uptime) {
+        long hours = uptime / 3600;
+        long minutes = (uptime % 3600) / 60;
+        long seconds = uptime % 60;
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
