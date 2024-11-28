@@ -2,7 +2,7 @@
 
 ## Team Members
 - **Tom Tully**
-- **Luca**
+- **Luca Knierim**
 - **Daniel**
 - **Nathan**
 
