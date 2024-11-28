@@ -1,8 +1,8 @@
 # Block 1 Project
 
 ## Team Members
-- **Tom Tully**
 - **Luca Knierim**
+- **Tom Tully**
 - **Daniel**
 - **Nathan**
 
